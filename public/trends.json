@@ -1,0 +1,227 @@
+{
+  "hero": {
+    "title": "FC Barcelona Postponement Drama",
+    "teaser": "5K+ searches spike as fans question a delayed match!",
+    "slug": "fc-barcelona-march-8-2025",
+    "spike": "5K+ searches",
+    "content": [
+      "FC Barcelona is trending with 5K+ searches after rumors of a postponed match surfaced.",
+      "Fans are digging into details about Carles Garcia and the club’s next moves—here’s the latest."
+    ],
+    "timestamp": "20 minutes ago",
+    "category": "sports",
+    "isHero": true,
+    "relatedTopics": ["Carles Garcia", "La Liga"],
+    "relatedQueries": ["barcelona match delay", "fc barcelona news"],
+    "image": "/images/fc-barcelona.jpg",
+    "createdAt": "2025-03-08T23:40:00Z",
+    "updatedAt": "2025-03-08T23:40:00Z"
+  },
+  "trends": [
+    {
+      "title": "Wisconsin Basketball",
+      "teaser": "10K+ searches after a thrilling game!",
+      "slug": "wisconsin-basketball-march-8-2025",
+      "spike": "10K+ searches",
+      "content": [
+        "Wisconsin Basketball surges to 10K+ searches following a nail-biting victory.",
+        "The team’s star player sealed the win with a last-second shot."
+      ],
+      "timestamp": "20 minutes ago",
+      "category": "sports",
+      "isHero": false,
+      "relatedTopics": ["NCAA", "Big Ten"],
+      "relatedQueries": ["wisconsin game highlights", "basketball score"],
+      "image": "/images/wisconsin-basketball.jpg",
+      "createdAt": "2025-03-08T23:40:00Z",
+      "updatedAt": "2025-03-08T23:40:00Z"
+    },
+    {
+      "title": "Georgetown Basketball",
+      "teaser": "500+ searches as Hoyas make waves!",
+      "slug": "georgetown-basketball-march-8-2025",
+      "spike": "500+ searches",
+      "content": [
+        "Georgetown Basketball is up 100% in searches after a standout performance."
+      ],
+      "timestamp": "20 minutes ago",
+      "category": "sports",
+      "isHero": false,
+      "relatedTopics": ["Hoyas", "College Basketball"],
+      "relatedQueries": ["georgetown score", "hoyas game"],
+      "image": "/images/georgetown-basketball.jpg",
+      "createdAt": "2025-03-08T23:40:00Z",
+      "updatedAt": "2025-03-08T23:40:00Z"
+    },
+    {
+      "title": "Barcelona Game",
+      "teaser": "500+ searches for the latest updates!",
+      "slug": "barcelona-game-march-8-2025",
+      "spike": "500+ searches",
+      "content": [
+        "Fans are searching for Barcelona’s next game details after the postponement drama."
+      ],
+      "timestamp": "20 minutes ago",
+      "category": "sports",
+      "isHero": false,
+      "relatedTopics": ["FC Barcelona", "Football"],
+      "relatedQueries": ["barcelona next match", "game schedule"],
+      "image": "/images/barcelona-game.jpg",
+      "createdAt": "2025-03-08T23:40:00Z",
+      "updatedAt": "2025-03-08T23:40:00Z"
+    },
+    {
+      "title": "Auburn University",
+      "teaser": "200+ searches spotlight Auburn!",
+      "slug": "auburn-university-march-8-2025",
+      "spike": "200+ searches",
+      "content": [
+        "Auburn University trends with 200+ searches after a notable campus event."
+      ],
+      "timestamp": "20 minutes ago",
+      "category": "education",
+      "isHero": false,
+      "relatedTopics": ["College News", "Auburn Tigers"],
+      "relatedQueries": ["auburn event", "university updates"],
+      "image": "/images/auburn-university.jpg",
+      "createdAt": "2025-03-08T23:40:00Z",
+      "updatedAt": "2025-03-08T23:40:00Z"
+    },
+    {
+      "title": "SpaceX Starship Launch",
+      "teaser": "20K+ searches as Elon Musk’s rocket takes off!",
+      "slug": "spacex-starship-march-8-2025",
+      "spike": "20K+ searches",
+      "content": [
+        "SpaceX launched its Starship, breaking records and trending globally."
+      ],
+      "timestamp": "1 hour ago",
+      "category": "space",
+      "isHero": false,
+      "relatedTopics": ["Elon Musk", "NASA"],
+      "relatedQueries": ["starship launch live", "spacex news"],
+      "image": "/images/spacex-starship.jpg",
+      "createdAt": "2025-03-08T23:00:00Z",
+      "updatedAt": "2025-03-08T23:00:00Z"
+    }
+  ],
+  "categories": {
+    "sports": [
+      {
+        "title": "FC Barcelona",
+        "teaser": "5K+ searches!",
+        "slug": "fc-barcelona-march-8-2025",
+        "spike": "5K+ searches",
+        "content": [
+          "FC Barcelona’s postponement drama continues to drive search interest."
+        ],
+        "timestamp": "20 minutes ago",
+        "category": "sports",
+        "isHero": true,
+        "relatedTopics": ["Carles Garcia", "La Liga"],
+        "relatedQueries": ["barcelona match delay", "fc barcelona news"],
+        "image": "/images/fc-barcelona.jpg",
+        "createdAt": "2025-03-08T23:40:00Z",
+        "updatedAt": "2025-03-08T23:40:00Z"
+      },
+      {
+        "title": "Wisconsin Basketball",
+        "teaser": "10K+ searches!",
+        "slug": "wisconsin-basketball-march-8-2025",
+        "spike": "10K+ searches",
+        "content": [
+          "Wisconsin Basketball’s thrilling game keeps fans buzzing."
+        ],
+        "timestamp": "20 minutes ago",
+        "category": "sports",
+        "isHero": false,
+        "relatedTopics": ["NCAA", "Big Ten"],
+        "relatedQueries": ["wisconsin game highlights", "basketball score"],
+        "image": "/images/wisconsin-basketball.jpg",
+        "createdAt": "2025-03-08T23:40:00Z",
+        "updatedAt": "2025-03-08T23:40:00Z"
+      },
+      {
+        "title": "Georgetown Basketball",
+        "teaser": "500+ searches!",
+        "slug": "georgetown-basketball-march-8-2025",
+        "spike": "500+ searches",
+        "content": [
+          "Georgetown Basketball makes waves with a strong showing."
+        ],
+        "timestamp": "20 minutes ago",
+        "category": "sports",
+        "isHero": false,
+        "relatedTopics": ["Hoyas", "College Basketball"],
+        "relatedQueries": ["georgetown score", "hoyas game"],
+        "image": "/images/georgetown-basketball.jpg",
+        "createdAt": "2025-03-08T23:40:00Z",
+        "updatedAt": "2025-03-08T23:40:00Z"
+      }
+    ],
+    "education": [
+      {
+        "title": "Auburn University",
+        "teaser": "200+ searches!",
+        "slug": "auburn-university-march-8-2025",
+        "spike": "200+ searches",
+        "content": [
+          "Auburn University gains attention with a campus spotlight."
+        ],
+        "timestamp": "20 minutes ago",
+        "category": "education",
+        "isHero": false,
+        "relatedTopics": ["College News", "Auburn Tigers"],
+        "relatedQueries": ["auburn event", "university updates"],
+        "image": "/images/auburn-university.jpg",
+        "createdAt": "2025-03-08T23:40:00Z",
+        "updatedAt": "2025-03-08T23:40:00Z"
+      }
+    ],
+    "space": [
+      {
+        "title": "SpaceX Starship Launch",
+        "teaser": "20K+ searches!",
+        "slug": "spacex-starship-march-8-2025",
+        "spike": "20K+ searches",
+        "content": [
+          "SpaceX’s Starship launch captivates audiences worldwide."
+        ],
+        "timestamp": "1 hour ago",
+        "category": "space",
+        "isHero": false,
+        "relatedTopics": ["Elon Musk", "NASA"],
+        "relatedQueries": ["starship launch live", "spacex news"],
+        "image": "/images/spacex-starship.jpg",
+        "createdAt": "2025-03-08T23:00:00Z",
+        "updatedAt": "2025-03-08T23:00:00Z"
+      }
+    ]
+  },
+  "updates": [
+    {
+      "title": "Potapova Tennis",
+      "spike": "1K+ searches",
+      "timestamp": "40 minutes ago",
+      "slug": "potapova-march-8-2025"
+    },
+    {
+      "title": "St John’s Marquette",
+      "spike": "500+ searches",
+      "timestamp": "40 minutes ago",
+      "slug": "st-johns-marquette-march-8-2025"
+    },
+    {
+      "title": "Joao Fonseca",
+      "spike": "500+ searches",
+      "timestamp": "40 minutes ago",
+      "slug": "joao-fonseca-march-8-2025"
+    },
+    {
+      "title": "SpaceX Starship Launch",
+      "spike": "20K+ searches",
+      "timestamp": "1 hour ago",
+      "slug": "spacex-starship-march-8-2025"
+    }
+  ]
+}

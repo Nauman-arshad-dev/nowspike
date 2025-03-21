@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <!-- Background Circle -->
+  <circle cx="120" cy="120" r="110" fill="#e6f7ff" stroke="#cce5ff" stroke-width="2"/>
+  
+  <!-- Applying rotation to the entire rocket group -->
+  <g transform="rotate(25, 120, 120)">
+    <!-- Rocket Body -->
+    <path d="M120 40 L140 140 L120 130 L100 140 L120 40Z" fill="#2d7ff9" stroke="#1a56c4" stroke-width="2"/>
+    
+    <!-- Rocket Window -->
+    <circle cx="120" cy="90" r="10" fill="#ffffff" stroke="#1a56c4" stroke-width="1"/>
+    
+    <!-- Rocket Fins -->
+    <path d="M100 140 L80 170 L100 160 Z" fill="#ff4757" stroke="#e82c3e" stroke-width="2"/>
+    <path d="M140 140 L160 170 L140 160 Z" fill="#ff4757" stroke="#e82c3e" stroke-width="2"/>
+    
+    <!-- Rocket Flame -->
+    <path d="M110 140 L120 190 L130 140 Z" fill="#ffda7b" stroke="#ffb142" stroke-width="0"/>
+    <path d="M115 140 L120 170 L125 140 Z" fill="#ff7f50" stroke="#ff5e3a" stroke-width="0"/>
+    
+    <!-- Speed Lines -->
+    <line x1="80" y1="70" x2="60" y2="50" stroke="#a7c5f9" stroke-width="3" stroke-linecap="round"/>
+    <line x1="70" y1="100" x2="40" y2="90" stroke="#a7c5f9" stroke-width="3" stroke-linecap="round"/>
+    <line x1="75" y1="130" x2="45" y2="140" stroke="#a7c5f9" stroke-width="3" stroke-linecap="round"/>
+    
+    <line x1="160" y1="70" x2="180" y2="50" stroke="#a7c5f9" stroke-width="3" stroke-linecap="round"/>
+    <line x1="170" y1="100" x2="200" y2="90" stroke="#a7c5f9" stroke-width="3" stroke-linecap="round"/>
+    <line x1="165" y1="130" x2="195" y2="140" stroke="#a7c5f9" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>
