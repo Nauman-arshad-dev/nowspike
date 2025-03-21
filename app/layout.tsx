@@ -2,12 +2,12 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { Trend } from "@/types/trend";
 import ClientProvider from "./ClientProvider";
 import Link from "next/link";
 import { FaSearch, FaTwitter, FaFacebook } from "react-icons/fa";
 import Image from "next/image";
 import Script from "next/script"; // Import Script component
+import { Trend } from "@/lib/models/trend";
 
 const poppins = Poppins({
   weight: ["400", "700"],

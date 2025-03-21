@@ -3,8 +3,6 @@ import { Trend } from "@/types/trend";
 import Link from "next/link";
 import TrendImage from "./TrendImage";
 
-interface TrendCardProps extends Trend {}
-
 export default function TrendCard({
   title,
   teaser,
@@ -13,7 +11,7 @@ export default function TrendCard({
   timestamp,
   category,
   image,
-}: TrendCardProps) {
+}: Trend) {
   return (
     <Link href={`/trends/${slug}`} className="block">
       <div className="bg-[var(--white)] p-4 sm:p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col gap-3 sm:gap-4">
