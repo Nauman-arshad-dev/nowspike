@@ -1,7 +1,6 @@
 // E:\nauman\NowSpike\frontend\app\admin\CardDetails.tsx
 "use client";
 import { ChangeEvent } from "react";
-import { Trend } from "@/types/trend";
 
 // Define ContentBlock (same as in page.tsx)
 interface ContentBlock {
