@@ -1,12 +1,13 @@
 // E:\nauman\NowSpike\frontend\app\admin\CardContent.tsx
 "use client";
 import { ChangeEvent, useState } from "react";
+import Image from "next/image";
 
 interface ContentBlock {
   type: "paragraph" | "image" | "video" | "x-embed";
-  title?: string; // New optional title field
+  title?: string;
   value: string;
-  image?: string; // New optional image field for paragraph blocks
+  image?: string;
   caption?: string;
 }
 
@@ -68,12 +69,20 @@ export default function CardContent({ content, setContent }: CardContentProps) {
               <input
                 type="file"
                 accept="image/*"
-                id={`paragraph-image-upload-${index}`} // Unique ID for paragraph image
+                id={`paragraph-image-upload-${index}`}
                 onChange={(e) => handleImageUpload(index, e, true)}
                 className="p-2 border rounded w-full mb-2"
               />
               {block.image && (
-                <img src={block.image} alt="Paragraph Image Preview" className="max-w-xs mb-2" />
+                <div className="relative w-full max-w-xs h-32 mb-2">
+                  <Image
+                    src={block.image}
+                    alt="Paragraph Image Preview"
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="rounded"
+                  />
+                </div>
               )}
             </>
           )}
@@ -87,7 +96,15 @@ export default function CardContent({ content, setContent }: CardContentProps) {
                 className="p-2 border rounded w-full mb-2"
               />
               {block.value && (
-                <img src={block.value} alt="Preview" className="max-w-xs mb-2" />
+                <div className="relative w-full max-w-xs h-32 mb-2">
+                  <Image
+                    src={block.value}
+                    alt="Preview"
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="rounded"
+                  />
+                </div>
               )}
               <input
                 type="text"

@@ -6,7 +6,12 @@ import Link from "next/link";
 import { FaTwitter, FaFacebook, FaShareAlt } from "react-icons/fa";
 
 async function getTrend(slug: string): Promise<Trend> {
-  const res = await fetch(`/api/trends/${slug}`, { cache: "no-store" });
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
+  }
+
+  const res = await fetch(`${baseUrl}/api/trends/${slug}`, { cache: "no-store" });
   if (!res.ok) {
     if (res.status === 404) notFound();
     throw new Error("Failed to fetch trend");
@@ -17,7 +22,11 @@ async function getTrend(slug: string): Promise<Trend> {
 }
 
 async function getRelatedTrends(category: string, currentSlug: string): Promise<Trend[]> {
-  const res = await fetch(`/api/trends?category=${category}`, { cache: "no-store" });
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
+  }
+  const res = await fetch(`${baseUrl}/api/trends?category=${category}`, { cache: "no-store" });
   const { data } = await res.json();
   return (data || []).filter((trend: Trend) => trend.slug !== currentSlug).slice(0, 3);
 }

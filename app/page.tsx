@@ -54,7 +54,11 @@ export const metadata = {
 };
 
 async function getTrends(): Promise<Trend[]> {
-  const res = await fetch("/api/trends", { cache: "no-store" });
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
+  }
+  const res = await fetch(`${baseUrl}/api/trends`, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to fetch trends");
   const { data } = await res.json();
   return data || [];
@@ -171,45 +175,45 @@ export default async function Home() {
 
       {/* Hero Section */}
       {hero && (
-      <section className="relative bg-[var(--navy-blue)] text-white py-8 sm:py-12 lg:py-10 px-2 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col items-center gap-6 sm:gap-8 lg:gap-10">
-          <div className="w-full">
-            <TrendImage
-              src={hero.image || "/images/placeholder.jpg"}
-              alt={hero.title}
-              width={1200}
-              height={600}
-              priority
-              className="w-full h-56 sm:h-72 lg:h-[500px] object-cover rounded-xl shadow-2xl"
-            />
-          </div>
-          <div className="w-full mx-auto text-center lg:text-left">
-            <span className="inline-block bg-[var(--soft-blue)] text-white text-xs sm:text-sm lg:text-base font-semibold px-3 py-1 rounded-full mb-3 sm:mb-4 lg:mb-6">
-              {hero.spike}
-            </span>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-[--font-poppins] mb-2 sm:mb-3 lg:mb-4 leading-tight">
-              {hero.title}
-            </h1>
-            <p className="text-base sm:text-lg lg:text-xl opacity-90 max-w-2xl mx-auto lg:mx-0 line-clamp-2">
-              {hero.teaser}
-            </p>
-            <div className="mt-4 sm:mt-6 lg:mt-8 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4 sm:gap-6 lg:gap-8">
-              <Link
-                href={`/trends/${hero.slug}`}
-                className="inline-block bg-[var(--soft-blue)] text-white font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition-all duration-300 shadow-md"
-              >
-                Read More
-              </Link>
-              <span className="text-xs sm:text-sm lg:text-base text-[var(--background)] font-medium bg-white/10 px-3 py-1 rounded-lg">
-                Updated {hero.timestamp}
-              </span>
+        <section className="relative bg-[var(--navy-blue)] text-white py-8 sm:py-12 lg:py-10 px-2 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto relative z-10">
+            <div className="flex flex-col items-center gap-6 sm:gap-8 lg:gap-10">
+              <div className="w-full">
+                <TrendImage
+                  src={hero.image || "/images/placeholder.jpg"}
+                  alt={hero.title}
+                  width={1200}
+                  height={600}
+                  priority
+                  className="w-full h-56 sm:h-72 lg:h-[500px] object-cover rounded-xl shadow-2xl"
+                />
+              </div>
+              <div className="w-full mx-auto text-center lg:text-left">
+                <span className="inline-block bg-[var(--soft-blue)] text-white text-xs sm:text-sm lg:text-base font-semibold px-3 py-1 rounded-full mb-3 sm:mb-4 lg:mb-6">
+                  {hero.spike}
+                </span>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-[--font-poppins] mb-2 sm:mb-3 lg:mb-4 leading-tight">
+                  {hero.title}
+                </h1>
+                <p className="text-base sm:text-lg lg:text-xl opacity-90 max-w-2xl mx-auto lg:mx-0 line-clamp-2">
+                  {hero.teaser}
+                </p>
+                <div className="mt-4 sm:mt-6 lg:mt-8 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4 sm:gap-6 lg:gap-8">
+                  <Link
+                    href={`/trends/${hero.slug}`}
+                    className="inline-block bg-[var(--soft-blue)] text-white font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition-all duration-300 shadow-md"
+                  >
+                    Read More
+                  </Link>
+                  <span className="text-xs sm:text-sm lg:text-base text-[var(--background)] font-medium bg-white/10 px-3 py-1 rounded-lg">
+                    Updated {hero.timestamp}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy-blue)]/80 via-transparent to-transparent opacity-70" />
-    </section>
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy-blue)]/80 via-transparent to-transparent opacity-70" />
+        </section>
       )}
 
       {/* Category Filter Bar */}

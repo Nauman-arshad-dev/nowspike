@@ -62,7 +62,11 @@ export default function AdminPage() {
 
   const fetchTrends = async () => {
     try {
-      const res = await fetch("/api/trends", { cache: "no-store" });
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      if (!baseUrl) {
+        throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
+      }
+      const res = await fetch(`${baseUrl}/api/trends`, { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to fetch trends");
       const data = await res.json();
       setTrends(data.data || data);
@@ -113,8 +117,13 @@ export default function AdminPage() {
       formData.append("image", form.image || "/images/placeholder.jpg");
     }
 
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) {
+      throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
+    }
+
     const method = editSlug ? "PUT" : "POST";
-    const url = editSlug ? `/api/trends/${editSlug}` : "/api/trends";
+    const url = editSlug ? `${baseUrl}/api/trends/${editSlug}` : `${baseUrl}/api/trends`;
 
     try {
       const res = await fetch(url, {

@@ -21,7 +21,11 @@ const poppins = Poppins({
 
 async function fetchTrends(): Promise<Trend[]> {
   try {
-    const res = await fetch("/api/trends", { next: { revalidate: 60 } }); // Cache for 60 seconds
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) {
+      throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
+    }
+    const res = await fetch(`${baseUrl}/api/trends`, { next: { revalidate: 60 } }); // Cache for 60 seconds
     if (!res.ok) {
       throw new Error(`Failed to fetch trends: ${res.status} ${res.statusText}`);
     }
