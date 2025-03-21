@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   } catch {
     return {
-      title: "Trend Not Found - NowSpike",
+      title: "Not Found - NowSpike",
       description: "This trend could not be found on NowSpike.",
     };
   }
