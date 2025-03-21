@@ -19,18 +19,25 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  let trends: Trend[] = [];
-  
+async function fetchTrends(): Promise<Trend[]> {
   try {
-    const res = await fetch("/api/trends", { cache: "no-store" });
+    const res = await fetch("/api/trends", { next: { revalidate: 60 } }); // Cache for 60 seconds
     if (!res.ok) {
       throw new Error(`Failed to fetch trends: ${res.status} ${res.statusText}`);
     }
     const trendsData: TrendsResponse = await res.json();
-    trends = trendsData.data || [];
+    return trendsData.data || [];
   } catch (error) {
     console.error("Error fetching trends:", error);
+    return [];
+  }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const trends = await fetchTrends();
+  const topTrends = trends.map((t: Trend) => t.title).join(", ");
+
+  if (trends.length === 0) {
     return {
       title: "NowSpike - Today’s Trending Topics",
       description: "Discover what’s spiking now. Updated daily from Google.",
@@ -44,7 +51,6 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  const topTrends = trends.map((t: Trend) => t.title).join(", ");
   return {
     title: "NowSpike - Today’s Trending Topics",
     description: `Discover what’s spiking now: ${topTrends}. Updated daily from Google.`,
@@ -58,11 +64,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const trends = await fetchTrends();
+
   return (
     <html lang="en">
       <head>
@@ -110,6 +118,24 @@ export default function RootLayout({
                   />
                   <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--gray)]" />
                 </div>
+                {trends.length > 0 && (
+                  <div className="relative group">
+                    <button className="text-sm sm:text-base hover:text-[var(--soft-blue)] transition">
+                      Top Trends
+                    </button>
+                    <div className="absolute hidden group-hover:block bg-white text-[var(--navy-blue)] rounded-lg shadow-md mt-2 p-2">
+                      {trends.slice(0, 5).map((trend) => (
+                        <Link
+                          key={trend.slug}
+                          href={`/trends/${trend.slug}`}
+                          className="block px-2 py-1 hover:bg-[var(--soft-blue)] hover:text-white rounded text-sm"
+                        >
+                          {trend.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </nav>
           </div>
