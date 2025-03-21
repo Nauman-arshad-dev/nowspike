@@ -2,11 +2,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 import fs from "fs/promises";
 import path from "path";
 import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
+import { authOptions } from "@/lib/auth";
 
 export async function GET() {
   await connectDB();
