@@ -1,23 +1,24 @@
 // E:\nauman\NowSpike\frontend\lib\mongodb.ts
 import mongoose from "mongoose";
+import 'dotenv/config'; // Load environment variables from .env files
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error("Please define MONGODB_URI in .env.local");
+  throw new Error(
+    "Please define MONGODB_URI in your environment variables (e.g., .env.local or Vercel dashboard). See https://www.mongodb.com/docs/manual/reference/connection-string/ for details."
+  );
 }
 
-// Use a module-level variable instead of global.mongoose
 const cached: {
   conn: mongoose.Mongoose | null;
   promise: Promise<mongoose.Mongoose> | null;
-} = { conn: null, promise: null }; // Changed 'let' to 'const'
+} = { conn: null, promise: null };
 
 async function connectDB() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    // MONGODB_URI is guaranteed to be string here due to the earlier check
     cached.promise = mongoose.connect(MONGODB_URI as string, {
       bufferCommands: false,
     }).then((mongooseInstance) => mongooseInstance);
