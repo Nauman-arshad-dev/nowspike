@@ -54,7 +54,7 @@ export const metadata = {
 };
 
 async function getTrends(): Promise<Trend[]> {
-  const res = await fetch("http://localhost:3000/api/trends", { cache: "no-store" });
+  const res = await fetch("/api/trends", { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to fetch trends");
   const { data } = await res.json();
   return data || [];

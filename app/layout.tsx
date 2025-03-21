@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   let trends: Trend[] = [];
   
   try {
-    const res = await fetch("http://localhost:3000/api/trends", { cache: "no-store" });
+    const res = await fetch("/api/trends", { cache: "no-store" });
     if (!res.ok) {
       throw new Error(`Failed to fetch trends: ${res.status} ${res.statusText}`);
     }

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaTwitter, FaFacebook, FaShareAlt } from "react-icons/fa";
 
 async function getTrend(slug: string): Promise<Trend> {
-  const res = await fetch(`http://localhost:3000/api/trends/${slug}`, { cache: "no-store" });
+  const res = await fetch(`/api/trends/${slug}`, { cache: "no-store" });
   if (!res.ok) {
     if (res.status === 404) notFound();
     throw new Error("Failed to fetch trend");
@@ -17,7 +17,7 @@ async function getTrend(slug: string): Promise<Trend> {
 }
 
 async function getRelatedTrends(category: string, currentSlug: string): Promise<Trend[]> {
-  const res = await fetch(`http://localhost:3000/api/trends?category=${category}`, { cache: "no-store" });
+  const res = await fetch(`/api/trends?category=${category}`, { cache: "no-store" });
   const { data } = await res.json();
   return (data || []).filter((trend: Trend) => trend.slug !== currentSlug).slice(0, 3);
 }
