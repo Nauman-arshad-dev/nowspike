@@ -8,10 +8,10 @@ if (!MONGODB_URI) {
 }
 
 // Use a module-level variable instead of global.mongoose
-let cached: {
+const cached: {
   conn: mongoose.Mongoose | null;
   promise: Promise<mongoose.Mongoose> | null;
-} = { conn: null, promise: null };
+} = { conn: null, promise: null }; // Changed 'let' to 'const'
 
 async function connectDB() {
   if (cached.conn) return cached.conn;
