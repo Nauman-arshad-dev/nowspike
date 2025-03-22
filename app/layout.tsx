@@ -41,29 +41,33 @@ export async function generateMetadata(): Promise<Metadata> {
   const trends = await fetchTrends();
   const topTrends = trends.map((t: Trend) => t.title).join(", ");
 
-  if (trends.length === 0) {
-    return {
+  const baseMetadata: Metadata = {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_API_BASE_URL || "https://nowspike.com"),
+    title: {
+      template: "%s | NowSpike",
+      default: "NowSpike - Today’s Trending Topics",
+    },
+    description: "Discover what’s spiking now. Updated daily from Google.",
+    keywords: "trends, nowspike, daily news, google, sports, entertainment",
+    openGraph: {
       title: "NowSpike - Today’s Trending Topics",
-      description: "Discover what’s spiking now. Updated daily from Google.",
-      keywords: "trends, nowspike, daily news, google, sports, entertainment",
-      openGraph: {
-        title: "NowSpike - Today’s Trending Topics",
-        description: "Check out the latest trends spiking across the U.S.!",
-        url: "https://nowspike.com",
-        type: "website",
-      },
-    };
+      description: "Check out the latest trends spiking across the U.S.!",
+      url: "/", // Relative path, resolved with metadataBase
+      type: "website",
+    },
+  };
+
+  if (trends.length === 0) {
+    return baseMetadata;
   }
 
   return {
-    title: "NowSpike - Today’s Trending Topics",
+    ...baseMetadata,
     description: `Discover what’s spiking now: ${topTrends}. Updated daily from Google.`,
     keywords: `${topTrends}, trends, nowspike, daily news, google, sports, entertainment`,
     openGraph: {
-      title: "NowSpike - Today’s Trending Topics",
+      ...baseMetadata.openGraph,
       description: `Check out the latest trends spiking across the U.S.: ${topTrends}!`,
-      url: "https://nowspike.com",
-      type: "website",
     },
   };
 }
@@ -77,11 +81,8 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <head>
-        {/* Remove Script components from here */}
-      </head>
       <body className={`${poppins.variable} antialiased`}>
-        <AnalyticsScripts /> {/* Add the client component here */}
+        <AnalyticsScripts />
         <header className="bg-[var(--navy-blue)] text-white py-4 px-4 fixed top-0 left-0 w-full z-50 shadow-md">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
             <Link href="/" className="hover:text-[var(--soft-blue)] transition flex items-center gap-2" title="Home">

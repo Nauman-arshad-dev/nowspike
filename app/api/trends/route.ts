@@ -1,4 +1,4 @@
-// E:\nauman\NowSpike\frontend\app\api\trends\route.ts
+// app/api/trends/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { getServerSession } from "next-auth";
@@ -8,10 +8,39 @@ import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   await connectDB();
-  const trends = await TrendModel.find().sort({ updatedAt: -1 }).lean();
-  return NextResponse.json({ data: trends }, { status: 200 });
+
+  // Get query parameters for pagination
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 trends per page
+  const skip = (page - 1) * limit;
+
+  // Fetch total number of trends for pagination metadata
+  const totalTrends = await TrendModel.countDocuments();
+
+  // Fetch trends for the current page
+  const trends = await TrendModel.find()
+    .sort({ updatedAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean();
+
+  // Calculate pagination metadata
+  const totalPages = Math.ceil(totalTrends / limit);
+
+  return NextResponse.json(
+    {
+      data: trends,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalTrends: totalTrends,
+      },
+    },
+    { status: 200 }
+  );
 }
 
 export async function POST(req: NextRequest) {
@@ -43,7 +72,7 @@ export async function POST(req: NextRequest) {
     for (let i = 0; i < content.length; i++) {
       if (content[i].type === "image" && content[i].value?.startsWith("content-image-")) {
         const fileKey = content[i].value;
-        if (fileKey) { // Type guard to ensure fileKey is defined
+        if (fileKey) {
           const imageFile = formData.get(fileKey) as File | null;
           if (imageFile instanceof File && slug) {
             const uploadDir = path.join(process.cwd(), "public/uploads");
@@ -58,7 +87,7 @@ export async function POST(req: NextRequest) {
       }
       if (content[i].type === "paragraph" && content[i].image?.startsWith("paragraph-image-")) {
         const fileKey = content[i].image;
-        if (fileKey) { // Type guard to ensure fileKey is defined
+        if (fileKey) {
           const imageFile = formData.get(fileKey) as File | null;
           if (imageFile instanceof File && slug) {
             const uploadDir = path.join(process.cwd(), "public/uploads");

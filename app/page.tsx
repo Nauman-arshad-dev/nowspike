@@ -1,57 +1,9 @@
 // app/page.tsx
+import type { Metadata } from "next";
 import TrendCard from "@/components/TrendCard";
 import TrendImage from "@/components/TrendImage";
 import { Trend } from "@/types/trend";
 import Link from "next/link";
-import SchemaScripts from "@/components/SchemaScripts"; // Import the new component
-
-export const metadata = {
-  title: "NowSpike - Trending News & Daily Updates from Google",
-  description: "Explore the latest trending topics updated daily on NowSpike—your go-to source for Arts, Tech, Health, Sports, Autos, Beauty, and more from Google.",
-  keywords: [
-    "trending news",
-    "daily updates",
-    "Google",
-    "Arts & Entertainment",
-    "Autos & Vehicles",
-    "Beauty & Fitness",
-    "Books & Literature",
-    "Business & Industrial",
-    "Computers & Electronics",
-    "Finance",
-    "Food & Drink",
-    "Games",
-    "Health",
-    "Hobbies & Leisure",
-    "Home & Garden",
-    "Internet & Telecom",
-    "Jobs & Education",
-    "Law & Government",
-    "News",
-    "Online Communities",
-    "People & Society",
-    "Pets & Animals",
-    "Real Estate",
-    "Science",
-    "Shopping",
-    "Sports",
-    "Travel",
-  ].join(", "),
-  openGraph: {
-    title: "NowSpike - Trending News & Daily Updates",
-    description: "Stay ahead with daily trending topics from Google on NowSpike—Arts, Tech, Health, and more!",
-    url: "https://nowspike.com",
-    type: "website",
-    images: [
-      {
-        url: "https://nowspike.com/images/default-og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "NowSpike Trending News",
-      },
-    ],
-  },
-};
 
 async function getTrends(): Promise<Trend[]> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -62,6 +14,63 @@ async function getTrends(): Promise<Trend[]> {
   if (!res.ok) throw new Error("Failed to fetch trends");
   const { data } = await res.json();
   return data || [];
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const trends = await getTrends();
+  const hero = trends.find((trend) => trend.isHero) || trends[0];
+
+  return {
+    title: hero ? `${hero.title}` : "NowSpike - Trending News & Daily Updates from Google", // title.template from layout.tsx will append " | NowSpike"
+    description: hero
+      ? hero.teaser
+      : "Explore the latest trending topics updated daily on NowSpike—your go-to source for Arts, Tech, Health, Sports, Autos, Beauty, and more from Google.",
+    keywords: [
+      "trending news",
+      "daily updates",
+      "Google",
+      "Arts & Entertainment",
+      "Autos & Vehicles",
+      "Beauty & Fitness",
+      "Books & Literature",
+      "Business & Industrial",
+      "Computers & Electronics",
+      "Finance",
+      "Food & Drink",
+      "Games",
+      "Health",
+      "Hobbies & Leisure",
+      "Home & Garden",
+      "Internet & Telecom",
+      "Jobs & Education",
+      "Law & Government",
+      "News",
+      "Online Communities",
+      "People & Society",
+      "Pets & Animals",
+      "Real Estate",
+      "Science",
+      "Shopping",
+      "Sports",
+      "Travel",
+    ].join(", "),
+    openGraph: {
+      title: hero ? `${hero.title} | NowSpike Trending News` : "NowSpike - Trending News & Daily Updates",
+      description: hero
+        ? hero.teaser
+        : "Stay ahead with daily trending topics from Google on NowSpike—Arts, Tech, Health, and more!",
+      url: "/", // Relative path, resolved with metadataBase
+      type: "website",
+      images: [
+        {
+          url: hero?.image || "/images/default-og-image.jpg", // Relative path, resolved with metadataBase
+          width: 1200,
+          height: 630,
+          alt: hero?.title || "NowSpike Trending News",
+        },
+      ],
+    },
+  };
 }
 
 export default async function Home() {
@@ -78,79 +87,70 @@ export default async function Home() {
   const uniqueCategories = Object.keys(categories).sort();
   const tickerTrends = nonHeroTrends.slice(0, 5).map((t) => `${t.title} - ${t.spike}`);
 
-  // Dynamic Open Graph for Hero Trend
-  metadata.openGraph.title = `${hero.title} | NowSpike Trending News`;
-  metadata.openGraph.description = hero.teaser;
-  metadata.openGraph.images = [
-    {
-      url: hero.image || "https://nowspike.com/images/default-og-image.jpg",
-      width: 1200,
-      height: 630,
-      alt: hero.title,
-    },
-  ];
-
-  // Schema Markup
+  // Schema Markup (rendered server-side)
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "NewsMediaOrganization",
-    "name": "NowSpike",
-    "url": "https://nowspike.com",
-    "description": "NowSpike delivers daily trending news across 24 categories sourced from Google.",
-    "mainEntityOfPage": {
+    name: "NowSpike",
+    url: "https://nowspike.com",
+    description: "NowSpike delivers daily trending news across 24 categories sourced from Google.",
+    mainEntityOfPage: {
       "@type": "WebPage",
       "@id": "https://nowspike.com",
     },
-    "article": [
+    article: [
       {
         "@type": "NewsArticle",
-        "headline": hero.title,
-        "image": [hero.image || "https://nowspike.com/images/default-og-image.jpg"],
-        "datePublished": hero.timestamp,
-        "dateModified": hero.timestamp,
-        "author": {
+        headline: hero.title,
+        image: [hero.image || "https://nowspike.com/images/default-og-image.jpg"],
+        datePublished: hero.timestamp,
+        dateModified: hero.timestamp,
+        author: {
           "@type": "Organization",
-          "name": "NowSpike",
+          name: "NowSpike",
         },
-        "publisher": {
+        publisher: {
           "@type": "Organization",
-          "name": "NowSpike",
-          "logo": {
+          name: "NowSpike",
+          logo: {
             "@type": "ImageObject",
-            "url": "https://nowspike.com/logo.svg",
+            url: "https://nowspike.com/logo.svg",
           },
         },
-        "description": hero.teaser,
-        "url": `https://nowspike.com/trends/${hero.slug}`,
+        description: hero.teaser,
+        url: `https://nowspike.com/trends/${hero.slug}`,
       },
       ...nonHeroTrends.slice(0, 4).map((trend) => ({
         "@type": "NewsArticle",
-        "headline": trend.title,
-        "image": [trend.image || "https://nowspike.com/images/default-og-image.jpg"],
-        "datePublished": trend.timestamp,
-        "dateModified": trend.timestamp,
-        "author": {
+        headline: trend.title,
+        image: [trend.image || "https://nowspike.com/images/default-og-image.jpg"],
+        datePublished: trend.timestamp,
+        dateModified: trend.timestamp,
+        author: {
           "@type": "Organization",
-          "name": "NowSpike",
+          name: "NowSpike",
         },
-        "publisher": {
+        publisher: {
           "@type": "Organization",
-          "name": "NowSpike",
-          "logo": {
+          name: "NowSpike",
+          logo: {
             "@type": "ImageObject",
-            "url": "https://nowspike.com/logo.svg",
+            url: "https://nowspike.com/logo.svg",
           },
         },
-        "description": trend.teaser,
-        "url": `https://nowspike.com/trends/${trend.slug}`,
+        description: trend.teaser,
+        url: `https://nowspike.com/trends/${trend.slug}`,
       })),
     ],
   };
 
   return (
     <div className="min-h-screen text-[var(--foreground)] bg-[var(--background)]">
-      <SchemaScripts schemaData={schemaData} /> {/* Add the client component here */}
-      {/* Rest of the page content remains the same */}
+      {/* Render JSON-LD server-side */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
       <div className="bg-gradient-to-r from-[var(--navy-blue)] to-[#1A3A6D] text-white py-3 sm:py-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center px-2 sm:px-6">
           <span className="bg-[var(--breaking-red)] text-white font-bold text-xs sm:text-sm px-3 sm:px-4 py-1 rounded-full shrink-0">
