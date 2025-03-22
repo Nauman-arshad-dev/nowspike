@@ -18,8 +18,6 @@ async function getTrend(slug: string): Promise<Trend> {
   }
 
   const trend: Trend = await res.json();
-  console.log("API Response for slug", slug, ":", trend);
-
   if (!trend) notFound();
 
   return trend;
