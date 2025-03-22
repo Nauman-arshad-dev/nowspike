@@ -11,17 +11,24 @@ import { authOptions } from "@/lib/auth";
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  // Get query parameters for pagination
+  // Get query parameters for pagination and filtering
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
-  const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 trends per page
+  const limit = parseInt(searchParams.get("limit") || "10", 10);
+  const category = searchParams.get("category") || undefined;
   const skip = (page - 1) * limit;
 
+  // Build the query
+  const query: any = {};
+  if (category && category !== "undefined") {
+    query.category = category;
+  }
+
   // Fetch total number of trends for pagination metadata
-  const totalTrends = await TrendModel.countDocuments();
+  const totalTrends = await TrendModel.countDocuments(query);
 
   // Fetch trends for the current page
-  const trends = await TrendModel.find()
+  const trends = await TrendModel.find(query)
     .sort({ updatedAt: -1 })
     .skip(skip)
     .limit(limit)

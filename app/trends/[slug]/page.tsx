@@ -16,17 +16,31 @@ async function getTrend(slug: string): Promise<Trend> {
     if (res.status === 404) notFound();
     throw new Error("Failed to fetch trend");
   }
-  const { data } = await res.json();
-  if (!data) notFound();
-  return data;
+
+  const trend: Trend = await res.json();
+  console.log("API Response for slug", slug, ":", trend);
+
+  if (!trend) notFound();
+
+  return trend;
 }
 
-async function getRelatedTrends(category: string, currentSlug: string): Promise<Trend[]> {
+async function getRelatedTrends(category: string | undefined, currentSlug: string): Promise<Trend[]> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   if (!baseUrl) {
     throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
   }
-  const res = await fetch(`${baseUrl}/api/trends?category=${category}`, { cache: "no-store" });
+
+  // If category is undefined, fetch all trends
+  const url = category && category !== "undefined"
+    ? `${baseUrl}/api/trends?category=${category}`
+    : `${baseUrl}/api/trends`;
+
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error("Failed to fetch related trends");
+  }
+
   const { data } = await res.json();
   return (data || []).filter((trend: Trend) => trend.slug !== currentSlug).slice(0, 3);
 }
@@ -102,70 +116,76 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
       {/* Main Content */}
       <section className="mb-12 sm:mb-16 grid grid-cols-1 gap-6 sm:gap-8">
         <div className="space-y-6 sm:space-y-8">
-          {trend.content.map((block: ContentBlock, index: number) => (
-            <div
-              key={index}
-              className="mb-6 sm:mb-8 bg-[var(--white)] rounded-2xl shadow-md p-4 sm:p-8 transition-all duration-300 hover:shadow-xl"
-            >
-              {block.title && (
-                <h3 className="text-xl sm:text-3xl font-semibold text-[var(--navy-blue)] mb-3 sm:mb-4 leading-tight">
-                  {block.title}
-                </h3>
-              )}
-              {block.type === "paragraph" && (
-                <div>
-                  {block.image && (
+          {Array.isArray(trend.content) && trend.content.length > 0 ? (
+            trend.content.map((block: ContentBlock, index: number) => (
+              <div
+                key={index}
+                className="mb-6 sm:mb-8 bg-[var(--white)] rounded-2xl shadow-md p-4 sm:p-8 transition-all duration-300 hover:shadow-xl"
+              >
+                {block.title && (
+                  <h3 className="text-xl sm:text-3xl font-semibold text-[var(--navy-blue)] mb-3 sm:mb-4 leading-tight">
+                    {block.title}
+                  </h3>
+                )}
+                {block.type === "paragraph" && (
+                  <div>
+                    {block.image && (
+                      <TrendImage
+                        src={block.image}
+                        alt={block.title || "Paragraph Image"}
+                        width={1000}
+                        height={500}
+                        loading="lazy"
+                        className="w-full h-auto rounded-xl mb-4 sm:mb-6 shadow-md transition-transform duration-300 hover:scale-102"
+                      />
+                    )}
+                    <p className="text-[var(--foreground)] text-base sm:text-lg leading-relaxed">{block.value}</p>
+                  </div>
+                )}
+                {block.type === "image" && (
+                  <figure>
                     <TrendImage
-                      src={block.image}
-                      alt={block.title || "Paragraph Image"}
+                      src={block.value}
+                      alt={block.caption || trend.title}
                       width={1000}
                       height={500}
                       loading="lazy"
-                      className="w-full h-auto rounded-xl mb-4 sm:mb-6 shadow-md transition-transform duration-300 hover:scale-102"
+                      className="w-full h-auto rounded-xl shadow-md transition-transform duration-300 hover:scale-102"
                     />
-                  )}
-                  <p className="text-[var(--foreground)] text-base sm:text-lg leading-relaxed">{block.value}</p>
-                </div>
-              )}
-              {block.type === "image" && (
-                <figure>
-                  <TrendImage
-                    src={block.value}
-                    alt={block.caption || trend.title}
-                    width={1000}
-                    height={500}
-                    loading="lazy"
-                    className="w-full h-auto rounded-xl shadow-md transition-transform duration-300 hover:scale-102"
-                  />
-                  {block.caption && (
-                    <figcaption className="text-xs sm:text-sm text-[var(--muted-blue)] mt-2 sm:mt-3 italic">
-                      {block.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              )}
-              {block.type === "video" && (
-                <div className="video-wrapper">
-                  <iframe
-                    src={block.value}
-                    title={block.caption || "Video"}
-                    className="w-full h-64 sm:h-80 md:h-[550px] rounded-xl shadow-md"
-                    allowFullScreen
-                  />
-                  {block.caption && (
-                    <p className="text-xs sm:text-sm text-[var(--muted-blue)] mt-2 sm:mt-3 italic">{block.caption}</p>
-                  )}
-                </div>
-              )}
-              {block.type === "x-embed" && (
-                <div className="bg-[var(--background)] p-3 sm:p-4 rounded-xl">
-                  <p className="text-[var(--foreground)] text-sm sm:text-base">
-                    [X Post: <a href={block.value} className="text-[var(--soft-blue)] hover:underline">{block.value}</a>]
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
+                    {block.caption && (
+                      <figcaption className="text-xs sm:text-sm text-[var(--muted-blue)] mt-2 sm:mt-3 italic">
+                        {block.caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                )}
+                {block.type === "video" && (
+                  <div className="video-wrapper">
+                    <iframe
+                      src={block.value}
+                      title={block.caption || "Video"}
+                      className="w-full h-64 sm:h-80 md:h-[550px] rounded-xl shadow-md"
+                      allowFullScreen
+                    />
+                    {block.caption && (
+                      <p className="text-xs sm:text-sm text-[var(--muted-blue)] mt-2 sm:mt-3 italic">{block.caption}</p>
+                    )}
+                  </div>
+                )}
+                {block.type === "x-embed" && (
+                  <div className="bg-[var(--background)] p-3 sm:p-4 rounded-xl">
+                    <p className="text-[var(--foreground)] text-sm sm:text-base">
+                      [X Post: <a href={block.value} className="text-[var(--soft-blue)] hover:underline">{block.value}</a>]
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="text-[var(--foreground)] text-base sm:text-lg">
+              No content available for this trend.
+            </p>
+          )}
         </div>
 
         {/* Sidebar: Trend Insights & Social Buzz */}

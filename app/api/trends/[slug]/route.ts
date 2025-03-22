@@ -8,41 +8,20 @@ import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, { params }: { params: { slug: string } }) {
   await connectDB();
 
-  // Get query parameters for pagination
-  const { searchParams } = new URL(req.url);
-  const page = parseInt(searchParams.get("page") || "1", 10);
-  const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 trends per page
-  const skip = (page - 1) * limit;
+  const { slug } = params;
 
-  // Fetch total number of trends for pagination metadata
-  const totalTrends = await TrendModel.countDocuments();
+  // Fetch the trend with the matching slug
+  const trend = await TrendModel.findOne({ slug }).lean();
 
-  // Fetch trends for the current page
-  const trends = await TrendModel.find()
-    .sort({ updatedAt: -1 })
-    .skip(skip)
-    .limit(limit)
-    .lean();
+  if (!trend) {
+    return NextResponse.json({ error: "Trend not found" }, { status: 404 });
+  }
 
-  // Calculate pagination metadata
-  const totalPages = Math.ceil(totalTrends / limit);
-
-  return NextResponse.json(
-    {
-      data: trends,
-      pagination: {
-        currentPage: page,
-        totalPages: totalPages,
-        totalTrends: totalTrends,
-      },
-    },
-    { status: 200 }
-  );
+  return NextResponse.json(trend, { status: 200 });
 }
-
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
