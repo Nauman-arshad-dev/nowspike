@@ -2,11 +2,6 @@
 User-agent: *
 Allow: /
 
-# *
-User-agent: *
-Disallow: /admin
-Disallow: /admin/login
-
 # Host
 Host: https://nowspike.com
 
