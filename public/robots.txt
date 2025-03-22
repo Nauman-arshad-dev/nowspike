@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://nowspike.com
-
-# Sitemaps
-Sitemap: https://nowspike.com/sitemap.xml
