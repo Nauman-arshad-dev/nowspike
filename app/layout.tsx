@@ -31,7 +31,7 @@ async function fetchTrends(): Promise<Trend[]> {
     }
     const trendsData: TrendsResponse = await res.json();
     return trendsData.data || [];
-  } catch (error) {
+  } catch (_error) {
     return [];
   }
 }
