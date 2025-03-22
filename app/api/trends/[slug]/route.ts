@@ -8,15 +8,13 @@ import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
 
-// Define the type for the params
-interface Params {
-  slug: string;
-}
-
-export async function GET(req: NextRequest, context: { params: Params }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { slug: string } }
+) {
   await connectDB();
 
-  const { slug } = context.params;
+  const { slug } = params;
 
   // Fetch the trend with the matching slug
   const trend = await TrendModel.findOne({ slug }).lean();
