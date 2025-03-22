@@ -1,4 +1,4 @@
-// E:\nauman\NowSpike\frontend\app\layout.tsx
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -6,8 +6,8 @@ import ClientProvider from "./ClientProvider";
 import Link from "next/link";
 import { FaSearch, FaTwitter, FaFacebook } from "react-icons/fa";
 import Image from "next/image";
-import Script from "next/script";
 import { Trend } from "@/types/trend";
+import AnalyticsScripts from "@/components/AnalyticsScripts";
 
 interface TrendsResponse {
   data: Trend[];
@@ -25,7 +25,7 @@ async function fetchTrends(): Promise<Trend[]> {
     if (!baseUrl) {
       throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
     }
-    const res = await fetch(`${baseUrl}/api/trends`, { next: { revalidate: 60 } }); // Cache for 60 seconds
+    const res = await fetch(`${baseUrl}/api/trends`, { next: { revalidate: 60 } });
     if (!res.ok) {
       throw new Error(`Failed to fetch trends: ${res.status} ${res.statusText}`);
     }
@@ -78,25 +78,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-4CGXYV02DR"
-        />
-        <Script
-          id="google-analytics-config"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-4CGXYV02DR');
-            `,
-          }}
-        />
+        {/* Remove Script components from here */}
       </head>
       <body className={`${poppins.variable} antialiased`}>
+        <AnalyticsScripts /> {/* Add the client component here */}
         <header className="bg-[var(--navy-blue)] text-white py-4 px-4 fixed top-0 left-0 w-full z-50 shadow-md">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
             <Link href="/" className="hover:text-[var(--soft-blue)] transition flex items-center gap-2" title="Home">

@@ -1,9 +1,9 @@
-// E:\nauman\NowSpike\frontend\app\page.tsx
+// app/page.tsx
 import TrendCard from "@/components/TrendCard";
 import TrendImage from "@/components/TrendImage";
 import { Trend } from "@/types/trend";
 import Link from "next/link";
-import Script from "next/script";
+import SchemaScripts from "@/components/SchemaScripts"; // Import the new component
 
 export const metadata = {
   title: "NowSpike - Trending News & Daily Updates from Google",
@@ -149,10 +149,8 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen text-[var(--foreground)] bg-[var(--background)]">
-      {/* Schema Markup */}
-      <Script id="schema-org" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
-
-      {/* Trending Ticker */}
+      <SchemaScripts schemaData={schemaData} /> {/* Add the client component here */}
+      {/* Rest of the page content remains the same */}
       <div className="bg-gradient-to-r from-[var(--navy-blue)] to-[#1A3A6D] text-white py-3 sm:py-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center px-2 sm:px-6">
           <span className="bg-[var(--breaking-red)] text-white font-bold text-xs sm:text-sm px-3 sm:px-4 py-1 rounded-full shrink-0">
@@ -173,7 +171,6 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Hero Section */}
       {hero && (
         <section className="relative bg-[var(--navy-blue)] text-white py-8 sm:py-12 lg:py-10 px-2 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto relative z-10">
@@ -216,7 +213,6 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Category Filter Bar */}
       <section className="max-w-7xl mx-auto py-3 sm:py-4 px-2 sm:px-6 sticky top-20 sm:top-16 bg-gradient-to-b from-[var(--white)] to-gray-50 z-40 shadow-md">
         <div className="flex items-center overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[var(--soft-blue)] scrollbar-track-gray-200 pb-2">
           {uniqueCategories.map((cat) => (
@@ -231,7 +227,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Trending Now */}
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 lg:mb-6 flex items-center flex-wrap">
           Trending Now
@@ -244,7 +239,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Categories */}
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 sm:mb-6 lg:mb-8">
           Explore by Category
@@ -263,7 +257,6 @@ export default async function Home() {
         ))}
       </section>
 
-      {/* Latest Updates & Featured Stories */}
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16 lg:flex lg:flex-row lg:gap-12">
         <div className="w-full lg:w-2/3 mb-8 lg:mb-0">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 lg:mb-6">
@@ -319,7 +312,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Newsletter Signup */}
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16 bg-[var(--navy-blue)] text-white rounded-xl shadow-md">
         <div className="text-center">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] mb-3 sm:mb-4 lg:mb-6">Stay Ahead of the Trends</h2>
