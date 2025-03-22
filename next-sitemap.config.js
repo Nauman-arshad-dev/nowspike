@@ -5,7 +5,9 @@ module.exports = {
     sitemapSize: 7000,
     // Exclude admin pages from the sitemap
     exclude: ["/admin", "/admin/login"],
-    // Add static pages manually if needed
+    // Disable additional namespaces that might inject scripts
+    generateIndexSitemap: true,
+    // Add static pages manually
     additionalPaths: async (config) => {
       const staticPaths = [
         { loc: "/", changefreq: "daily", priority: 1.0 },
@@ -16,6 +18,12 @@ module.exports = {
   
       // Fetch dynamic trend pages from your API
       let trendPaths = [];
+      // Skip fetch during local build to avoid connection issues
+      if (process.env.NODE_ENV === "production" && !process.env.VERCEL) {
+        console.log("Skipping fetch for trends during local build");
+        return staticPaths;
+      }
+  
       try {
         const response = await fetch("https://nowspike.com/api/trends");
         if (!response.ok) {
