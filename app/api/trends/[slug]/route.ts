@@ -8,13 +8,16 @@ import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { slug: string } }
-) {
+export async function GET(req: NextRequest, context: unknown) {
   await connectDB();
 
-  const { slug } = params;
+  // Safely extract the slug from the context
+  const params = (context as { params?: { slug?: string } })?.params;
+  const slug = params?.slug;
+
+  if (!slug) {
+    return NextResponse.json({ error: "Slug is required" }, { status: 400 });
+  }
 
   // Fetch the trend with the matching slug
   const trend = await TrendModel.findOne({ slug }).lean();
