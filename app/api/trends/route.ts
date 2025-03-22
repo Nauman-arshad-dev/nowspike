@@ -8,6 +8,11 @@ import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
 
+// Define the type for the MongoDB query
+interface TrendQuery {
+  category?: string;
+}
+
 export async function GET(req: NextRequest) {
   await connectDB();
 
@@ -18,8 +23,8 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category") || undefined;
   const skip = (page - 1) * limit;
 
-  // Build the query
-  const query: any = {};
+  // Build the query with a specific type
+  const query: TrendQuery = {};
   if (category && category !== "undefined") {
     query.category = category;
   }
