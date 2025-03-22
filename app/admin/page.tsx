@@ -154,7 +154,6 @@ export default function AdminPage() {
       alert(editSlug ? "Trend updated successfully!" : "Trend added successfully!");
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
-      console.error("Error submitting trend:", error);
       alert(`Error: ${errorMessage}`);
     }
   };
