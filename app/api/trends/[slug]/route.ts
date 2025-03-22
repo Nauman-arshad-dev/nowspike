@@ -1,4 +1,4 @@
-// app/api/trends/route.ts
+// app/api/trends/[slug]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { getServerSession } from "next-auth";
@@ -8,10 +8,15 @@ import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
 
-export async function GET(req: NextRequest, { params }: { params: { slug: string } }) {
+// Define the type for the params
+interface Params {
+  slug: string;
+}
+
+export async function GET(req: NextRequest, context: { params: Params }) {
   await connectDB();
 
-  const { slug } = params;
+  const { slug } = context.params;
 
   // Fetch the trend with the matching slug
   const trend = await TrendModel.findOne({ slug }).lean();
@@ -22,6 +27,7 @@ export async function GET(req: NextRequest, { params }: { params: { slug: string
 
   return NextResponse.json(trend, { status: 200 });
 }
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
