@@ -66,7 +66,6 @@ export default function AdminPage() {
       if (!baseUrl) {
         throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
       }
-      console.log("API Base URL:", baseUrl);
       const res = await fetch(`${baseUrl}/api/trends`, { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to fetch trends");
       const data = await res.json();
