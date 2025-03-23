@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/blob": "^0.27.3",
     "dotenv": "^16.4.7",
     "formidable": "^3.5.2",
     "mongoose": "^8.12.1",
