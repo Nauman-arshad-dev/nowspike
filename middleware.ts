@@ -1,10 +1,22 @@
-// middleware.ts
+// E:\nauman\NowSpike\frontend\middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+  const host = req.headers.get("host") || "";
+  const protocol = req.headers.get("x-forwarded-proto") || "https";
+  const canonicalDomain = "https://www.nowspike.com";
 
-  // Apply CORS headers to all API routes
+  // Domain canonicalization: Redirect to https://www.nowspike.com
+  const currentUrl = `${protocol}://${host}${req.nextUrl.pathname}${req.nextUrl.search}`;
+  const isNonCanonical = host !== "www.nowspike.com" || protocol !== "https";
+
+  if (isNonCanonical) {
+    const redirectUrl = `${canonicalDomain}${req.nextUrl.pathname}${req.nextUrl.search}`;
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
+  // Apply CORS headers to API routes
+  const res = NextResponse.next();
   if (req.nextUrl.pathname.startsWith("/api")) {
     res.headers.set("Access-Control-Allow-Origin", "https://www.nowspike.com");
     res.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -18,5 +30,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
