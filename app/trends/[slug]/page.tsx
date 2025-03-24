@@ -75,7 +75,7 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
   let formattedTimestamp = "Unknown Date";
   try {
     formattedTimestamp = formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true });
-  } catch (error) {
+  } catch {
     console.warn(`Invalid timestamp for trend ${trend.slug}: ${trend.timestamp}`);
   }
 

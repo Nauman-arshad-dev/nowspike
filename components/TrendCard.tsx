@@ -17,7 +17,7 @@ export default function TrendCard({
   let formattedTimestamp = "Unknown Date";
   try {
     formattedTimestamp = formatDistanceToNow(new Date(timestamp), { addSuffix: true });
-  } catch (error) {
+  } catch {
     console.warn(`Invalid timestamp for trend ${slug}: ${timestamp}`);
   }
 

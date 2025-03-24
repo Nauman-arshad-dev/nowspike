@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import CardDetails from "./CardDetails";
 import CardContent from "./CardContent";
 import { Trend } from "@/types/trend";
-import { formatDistanceToNow, format } from "date-fns"; // Import date-fns for formatting
+import { formatDistanceToNow } from "date-fns"; // Import date-fns for formatting
 
 interface FormTrend {
   title?: string;

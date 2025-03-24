@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         throw new Error("Invalid updatedAt");
       }
       lastModified = date.toISOString();
-    } catch (error) {
+    } catch {
       console.warn(`Invalid updatedAt for trend ${trend.slug}: ${trend.updatedAt}. Using current date as fallback.`);
       lastModified = new Date().toISOString();
     }
