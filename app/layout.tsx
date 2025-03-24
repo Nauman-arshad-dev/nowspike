@@ -1,4 +1,4 @@
-// app/layout.tsx
+// E:\nauman\NowSpike\frontend\app\layout.tsx
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -41,17 +41,20 @@ export async function generateMetadata(): Promise<Metadata> {
   const topTrends = trends.map((t: Trend) => t.title).join(", ");
 
   const baseMetadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_API_BASE_URL || "https://nowspike.com"),
+    metadataBase: new URL("https://www.nowspike.com"), // Use canonical domain
     title: {
       template: "%s | NowSpike",
       default: "NowSpike - Today’s Trending Topics",
     },
     description: "Discover what’s spiking now. Updated daily from Google.",
     keywords: "trends, nowspike, daily news, google, sports, entertainment",
+    alternates: {
+      canonical: "https://www.nowspike.com", // Use alternates.canonical
+    },
     openGraph: {
       title: "NowSpike - Today’s Trending Topics",
       description: "Check out the latest trends spiking across the U.S.!",
-      url: "/", // Relative path, resolved with metadataBase
+      url: "/",
       type: "website",
     },
   };
@@ -80,6 +83,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={`${poppins.variable} antialiased`}>
         <AnalyticsScripts />
         <header className="bg-[var(--navy-blue)] text-white py-4 px-4 fixed top-0 left-0 w-full z-50 shadow-md">

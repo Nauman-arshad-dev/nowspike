@@ -1,4 +1,4 @@
-// app/sitemap.ts
+// E:\nauman\NowSpike\frontend\app\sitemap.ts
 import type { MetadataRoute } from "next";
 import { Trend } from "@/types/trend";
 
@@ -37,12 +37,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 1,
     },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
   ];
 
   const trendPages: MetadataRoute.Sitemap = trends.map((trend) => {
     let lastModified: string;
     try {
-      // Use updatedAt for lastModified to reflect the most recent update
       const date = new Date(trend.updatedAt);
       if (isNaN(date.getTime())) {
         throw new Error("Invalid updatedAt");
@@ -53,7 +70,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified = new Date().toISOString();
     }
 
-    // Ensure the image URL is absolute
     const imageUrl = trend.image
       ? trend.image.startsWith("http")
         ? trend.image

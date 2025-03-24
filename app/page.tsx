@@ -27,6 +27,9 @@ export async function generateMetadata(): Promise<Metadata> {
     description: hero
       ? hero.teaser
       : "Explore the latest trending topics updated daily on NowSpike—your go-to source for Arts, Tech, Health, Sports, Autos, Beauty, and more from Google.",
+    alternates: {
+      canonical: "https://www.nowspike.com", // Use alternates.canonical
+    },
     keywords: [
       "trending news",
       "daily updates",
@@ -61,7 +64,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: hero
         ? hero.teaser
         : "Stay ahead with daily trending topics from Google on NowSpike—Arts, Tech, Health, and more!",
-      url: "/",
+      url: "https://www.nowspike.com",
       type: "website",
       images: [
         {
@@ -89,22 +92,21 @@ export default async function Home() {
   const uniqueCategories = Object.keys(categories).sort();
   const tickerTrends = nonHeroTrends.slice(0, 5).map((t) => `${t.title} - ${t.spike}`);
 
-  // Schema Markup (rendered server-side)
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "NewsMediaOrganization",
     name: "NowSpike",
-    url: "https://nowspike.com",
+    url: "https://www.nowspike.com",
     description: "NowSpike delivers daily trending news across 24 categories sourced from Google.",
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": "https://nowspike.com",
+      "@id": "https://www.nowspike.com",
     },
     article: [
       {
         "@type": "NewsArticle",
         headline: hero.title,
-        image: [hero.image || "https://nowspike.com/images/default-og-image.jpg"],
+        image: [hero.image || "https://www.nowspike.com/images/default-og-image.jpg"],
         datePublished: hero.timestamp,
         dateModified: hero.updatedAt,
         author: {
@@ -116,16 +118,16 @@ export default async function Home() {
           name: "NowSpike",
           logo: {
             "@type": "ImageObject",
-            url: "https://nowspike.com/logo.svg",
+            url: "https://www.nowspike.com/logo.svg",
           },
         },
         description: hero.teaser,
-        url: `https://nowspike.com/trends/${hero.slug}`,
+        url: `https://www.nowspike.com/trends/${hero.slug}`,
       },
       ...nonHeroTrends.slice(0, 4).map((trend) => ({
         "@type": "NewsArticle",
         headline: trend.title,
-        image: [trend.image || "https://nowspike.com/images/default-og-image.jpg"],
+        image: [trend.image || "https://www.nowspike.com/images/default-og-image.jpg"],
         datePublished: trend.timestamp,
         dateModified: trend.updatedAt,
         author: {
@@ -137,18 +139,17 @@ export default async function Home() {
           name: "NowSpike",
           logo: {
             "@type": "ImageObject",
-            url: "https://nowspike.com/logo.svg",
+            url: "https://www.nowspike.com/logo.svg",
           },
         },
         description: trend.teaser,
-        url: `https://nowspike.com/trends/${trend.slug}`,
+        url: `https://www.nowspike.com/trends/${trend.slug}`,
       })),
     ],
   };
 
   return (
     <div className="min-h-screen text-[var(--foreground)] bg-[var(--background)]">
-      {/* Render JSON-LD server-side */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
@@ -229,7 +230,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Use the new TrendingNow component */}
       <TrendingNow initialTrends={nonHeroTrends} />
 
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
@@ -256,6 +256,22 @@ export default async function Home() {
         ))}
       </section>
 
+      <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 sm:mb-6 lg:mb-8">
+          Related Categories
+        </h2>
+        <div className="flex flex-wrap gap-4 sm:gap-6">
+          {uniqueCategories.slice(0, 5).map((cat) => (
+            <Link
+              key={cat}
+              href={`#${cat.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`}
+              className="text-[var(--soft-blue)] hover:underline text-sm sm:text-base lg:text-lg"
+            >
+              {cat}
+            </Link>
+          ))}
+        </div>
+      </section>
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16 lg:flex lg:flex-row lg:gap-12">
         <div className="w-full lg:w-2/3 mb-8 lg:mb-0">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 lg:mb-6">

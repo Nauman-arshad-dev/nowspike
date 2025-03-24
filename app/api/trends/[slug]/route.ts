@@ -1,4 +1,4 @@
-// app/api/trends/[slug]/route.ts
+// E:\nauman\NowSpike\frontend\app\api\trends\[slug]\route.ts
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { getServerSession } from "next-auth";
@@ -6,6 +6,7 @@ import { put } from "@vercel/blob";
 import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
+import { notifyGoogleIndexing } from "@/utils/notifyGoogleIndexing"; // Import the indexing function
 
 export async function GET(req: NextRequest, context: unknown) {
   await connectDB();
@@ -155,6 +156,17 @@ export async function POST(req: NextRequest) {
     });
 
     await trend.save();
+
+    // Notify Google Indexing API
+    const trendUrl = `https://www.nowspike.com/trends/${slug}`;
+    try {
+      await notifyGoogleIndexing(trendUrl, "URL_UPDATED");
+      console.log(`Notified Google Indexing API for ${trendUrl}`);
+    } catch (indexingError) {
+      console.error(`Failed to notify Google Indexing API for ${trendUrl}:`, indexingError);
+      // Note: We don't fail the request if indexing notification fails, as it's not critical to the user
+    }
+
     return NextResponse.json({ data: trend }, { status: 201 });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";

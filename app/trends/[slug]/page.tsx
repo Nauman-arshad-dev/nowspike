@@ -4,7 +4,7 @@ import TrendImage from "@/components/TrendImage";
 import { Trend, ContentBlock } from "@/types/trend";
 import Link from "next/link";
 import { FaTwitter, FaFacebook, FaShareAlt } from "react-icons/fa";
-import { formatDistanceToNow } from "date-fns"; // Import date-fns for relative time
+import { formatDistanceToNow } from "date-fns";
 
 async function getTrend(slug: string): Promise<Trend> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -30,7 +30,6 @@ async function getRelatedTrends(category: string | undefined, currentSlug: strin
     throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
   }
 
-  // If category is undefined, fetch all trends
   const url = category && category !== "undefined"
     ? `${baseUrl}/api/trends?category=${category}`
     : `${baseUrl}/api/trends`;
@@ -51,17 +50,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
       title: `${trend.title} - NowSpike`,
       description: trend.teaser,
+      alternates: {
+        canonical: `https://www.nowspike.com/trends/${resolvedParams.slug}`, // Use alternates.canonical
+      },
       openGraph: {
         title: trend.title,
         description: trend.teaser,
-        url: `https://nowspike.com/trends/${resolvedParams.slug}`,
-        images: trend.image ? [{ url: `https://nowspike.com${trend.image}` }] : [],
+        url: `https://www.nowspike.com/trends/${resolvedParams.slug}`,
+        images: trend.image ? [{ url: `https://www.nowspike.com${trend.image}` }] : [],
       },
     };
   } catch {
     return {
       title: "Not Found - NowSpike",
       description: "This trend could not be found on NowSpike.",
+      alternates: {
+        canonical: "https://www.nowspike.com",
+      },
     };
   }
 }
@@ -71,7 +76,6 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
   const trend = await getTrend(resolvedParams.slug);
   const relatedTrends = await getRelatedTrends(trend.category, trend.slug);
 
-  // Format the timestamp with error handling
   let formattedTimestamp = "Unknown Date";
   try {
     formattedTimestamp = formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true });
@@ -81,9 +85,8 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
 
   return (
     <article className="max-w-6xl mx-auto py-8 sm:py-12 px-2 sm:px-6 bg-[var(--background)] min-h-screen text-[var(--foreground)]">
-      {/* Hero Section */}
       <section className="mb-12 sm:mb-16 bg-[var(--navy-blue)] text-white rounded-2xl shadow-xl p-4 sm:p-8 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('/images/noise.png')]"></div>
+        <div className="absolute inset-0 opacity-10 bg-gradient-to-r from-gray-100 to-gray-200"></div>
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold font-[--font-poppins] mb-4 sm:mb-6 leading-tight z-10 relative">
           {trend.title}
         </h1>
@@ -109,10 +112,10 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
               <button className="flex items-center gap-2 bg-[var(--white)] text-[var(--navy-blue)] px-3 sm:px-4 py-2 rounded-lg hover:bg-[var(--soft-blue)] hover:text-white transition text-sm sm:text-base">
                 <FaShareAlt /> Share
               </button>
-              <a href={`https://twitter.com/intent/tweet?url=https://nowspike.com/trends/${trend.slug}`} className="text-white hover:text-[var(--soft-blue)]">
+              <a href={`https://twitter.com/intent/tweet?url=https://www.nowspike.com/trends/${trend.slug}`} className="text-white hover:text-[var(--soft-blue)]">
                 <FaTwitter size={20} />
               </a>
-              <a href={`https://facebook.com/sharer/sharer.php?u=https://nowspike.com/trends/${trend.slug}`} className="text-white hover:text-[var(--soft-blue)]">
+              <a href={`https://facebook.com/sharer/sharer.php?u=https://www.nowspike.com/trends/${trend.slug}`} className="text-white hover:text-[var(--soft-blue)]">
                 <FaFacebook size={20} />
               </a>
             </div>
@@ -120,7 +123,6 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="mb-12 sm:mb-16 grid grid-cols-1 gap-6 sm:gap-8">
         <div className="space-y-6 sm:space-y-8">
           {Array.isArray(trend.content) && trend.content.length > 0 ? (
@@ -195,7 +197,6 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
           )}
         </div>
 
-        {/* Sidebar: Trend Insights & Social Buzz */}
         <aside className="flex flex-row gap-6 sm:gap-8 space-y-6 sm:space-y-8">
           <div className="bg-[var(--white)] rounded-2xl shadow-md p-4 sm:p-6 flex-1">
             <h2 className="text-lg sm:text-2xl font-semibold text-[var(--navy-blue)] mb-3 sm:mb-4">Trend Insights</h2>
@@ -214,7 +215,6 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
         </aside>
       </section>
 
-      {/* Related Topics and Queries */}
       {((trend.relatedTopics?.length ?? 0) > 0 || (trend.relatedQueries?.length ?? 0) > 0) && (
         <section className="mb-12 sm:mb-16 bg-[var(--white)] rounded-2xl shadow-md p-4 sm:p-8 flex flex-row gap-6 sm:gap-8">
           {trend.relatedTopics && trend.relatedTopics.length > 0 && (
@@ -240,7 +240,6 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
         </section>
       )}
 
-      {/* Related Trends */}
       {relatedTrends.length > 0 && (
         <section className="mb-12 sm:mb-16">
           <h2 className="text-xl sm:text-3xl font-bold text-[var(--navy-blue)] mb-4 sm:mb-6">More in {trend.category}</h2>
@@ -265,7 +264,6 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
         </section>
       )}
 
-      {/* Meta Info */}
       <section className="text-xs sm:text-sm text-[var(--foreground)] bg-[var(--white)] rounded-2xl shadow-md p-4 sm:p-6">
         <p>
           Category: <span className="capitalize font-medium">{trend.category}</span>
