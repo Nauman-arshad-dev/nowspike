@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import CardDetails from "./CardDetails";
 import CardContent from "./CardContent";
 import { Trend } from "@/types/trend";
+import { formatDistanceToNow, format } from "date-fns"; // Import date-fns for formatting
 
 interface FormTrend {
   title?: string;
@@ -25,9 +26,9 @@ interface FormTrend {
 
 interface ContentBlock {
   type: "paragraph" | "image" | "video" | "x-embed";
-  title?: string; // New optional title field
+  title?: string;
   value: string;
-  image?: string; // New optional image field for paragraph blocks
+  image?: string;
   caption?: string;
 }
 
@@ -41,7 +42,7 @@ export default function AdminPage() {
     teaser: "",
     slug: "",
     spike: "",
-    content: [{ type: "paragraph", value: "", title: "" }], // Include title in default block
+    content: [{ type: "paragraph", value: "", title: "" }],
     timestamp: "",
     category: "",
     isHero: false,
@@ -77,6 +78,14 @@ export default function AdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Add confirmation dialog before submitting
+    const confirmMessage = editSlug
+      ? "Are you sure you want to update this trend?"
+      : "Are you sure you want to add this trend?";
+    if (!confirm(confirmMessage)) {
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", form.title || "");
@@ -249,7 +258,7 @@ export default function AdminPage() {
                 <div>
                   <h3 className="text-lg font-bold text-blue-900">{trend.title}</h3>
                   <p className="text-gray-600 text-sm">
-                    {trend.category} - {trend.timestamp}
+                    {trend.category} - Published {formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true })}
                   </p>
                   <p className="text-gray-500 text-sm">Slug: {trend.slug}</p>
                 </div>

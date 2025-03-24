@@ -15,7 +15,7 @@ interface FormTrend {
   teaser?: string;
   slug?: string;
   spike?: string;
-  content?: ContentBlock[]; // Updated to ContentBlock[]
+  content?: ContentBlock[];
   timestamp?: string;
   category?: string;
   isHero?: boolean;
@@ -75,14 +75,16 @@ export default function CardDetails({ form, setForm, editSlug }: CardDetailsProp
         className="p-2 border rounded w-full"
         required
       />
-      <input
-        type="text"
-        placeholder="Timestamp (e.g., 5 hours ago)"
-        value={form.timestamp || ""}
-        onChange={(e) => setForm({ ...form, timestamp: e.target.value })}
-        className="p-2 border rounded w-full"
-        required
-      />
+      <label className="flex flex-col">
+        <span className="text-sm text-gray-600 mb-1">Published At</span>
+        <input
+          type="datetime-local"
+          value={form.timestamp ? form.timestamp.slice(0, 16) : ""}
+          onChange={(e) => setForm({ ...form, timestamp: new Date(e.target.value).toISOString() })}
+          className="p-2 border rounded w-full"
+          required
+        />
+      </label>
       <select
         value={form.category || ""}
         onChange={(e) => setForm({ ...form, category: e.target.value })}

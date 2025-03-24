@@ -4,6 +4,7 @@ import TrendImage from "@/components/TrendImage";
 import { Trend, ContentBlock } from "@/types/trend";
 import Link from "next/link";
 import { FaTwitter, FaFacebook, FaShareAlt } from "react-icons/fa";
+import { formatDistanceToNow } from "date-fns"; // Import date-fns for relative time
 
 async function getTrend(slug: string): Promise<Trend> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -70,6 +71,14 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
   const trend = await getTrend(resolvedParams.slug);
   const relatedTrends = await getRelatedTrends(trend.category, trend.slug);
 
+  // Format the timestamp with error handling
+  let formattedTimestamp = "Unknown Date";
+  try {
+    formattedTimestamp = formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true });
+  } catch (error) {
+    console.warn(`Invalid timestamp for trend ${trend.slug}: ${trend.timestamp}`);
+  }
+
   return (
     <article className="max-w-6xl mx-auto py-8 sm:py-12 px-2 sm:px-6 bg-[var(--background)] min-h-screen text-[var(--foreground)]">
       {/* Hero Section */}
@@ -94,7 +103,7 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-[var(--white)]">
               <span className="font-medium bg-white/10 px-2 py-1 rounded">Trending at: {trend.spike}</span>
               <span className="hidden sm:inline">|</span>
-              <span className="font-medium bg-white/10 px-2 py-1 rounded">Updated: {trend.timestamp}</span>
+              <span className="font-medium bg-white/10 px-2 py-1 rounded">Updated: {formattedTimestamp}</span>
             </div>
             <div className="flex gap-3 sm:gap-4 items-center">
               <button className="flex items-center gap-2 bg-[var(--white)] text-[var(--navy-blue)] px-3 sm:px-4 py-2 rounded-lg hover:bg-[var(--soft-blue)] hover:text-white transition text-sm sm:text-base">
@@ -192,7 +201,7 @@ export default async function TrendPage({ params }: { params: Promise<{ slug: st
             <h2 className="text-lg sm:text-2xl font-semibold text-[var(--navy-blue)] mb-3 sm:mb-4">Trend Insights</h2>
             <p className="text-[var(--foreground)] text-base sm:text-lg">
               Spiked to <strong className="text-[var(--navy-blue)]">{trend.spike}</strong> in searches, reported{" "}
-              <span className="italic text-[var(--muted-blue)]">{trend.timestamp}</span>.
+              <span className="italic text-[var(--muted-blue)]">{formattedTimestamp}</span>.
             </p>
           </div>
           <div className="bg-[var(--white)] rounded-2xl shadow-md p-4 sm:p-6 flex-1">

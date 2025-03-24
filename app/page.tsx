@@ -1,9 +1,11 @@
-// app/page.tsx
+// E:\nauman\NowSpike\frontend\app\page.tsx
 import type { Metadata } from "next";
 import TrendCard from "@/components/TrendCard";
 import TrendImage from "@/components/TrendImage";
 import { Trend } from "@/types/trend";
 import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
+import TrendingNow from "@/components/TrendingNow";
 
 async function getTrends(): Promise<Trend[]> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -21,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const hero = trends.find((trend) => trend.isHero) || trends[0];
 
   return {
-    title: hero ? `${hero.title}` : "NowSpike - Trending News & Daily Updates from Google", // title.template from layout.tsx will append " | NowSpike"
+    title: hero ? `${hero.title}` : "NowSpike - Trending News & Daily Updates from Google",
     description: hero
       ? hero.teaser
       : "Explore the latest trending topics updated daily on NowSpike—your go-to source for Arts, Tech, Health, Sports, Autos, Beauty, and more from Google.",
@@ -59,11 +61,11 @@ export async function generateMetadata(): Promise<Metadata> {
       description: hero
         ? hero.teaser
         : "Stay ahead with daily trending topics from Google on NowSpike—Arts, Tech, Health, and more!",
-      url: "/", // Relative path, resolved with metadataBase
+      url: "/",
       type: "website",
       images: [
         {
-          url: hero?.image || "/images/default-og-image.jpg", // Relative path, resolved with metadataBase
+          url: hero?.image || "/images/default-og-image.jpg",
           width: 1200,
           height: 630,
           alt: hero?.title || "NowSpike Trending News",
@@ -104,7 +106,7 @@ export default async function Home() {
         headline: hero.title,
         image: [hero.image || "https://nowspike.com/images/default-og-image.jpg"],
         datePublished: hero.timestamp,
-        dateModified: hero.timestamp,
+        dateModified: hero.updatedAt,
         author: {
           "@type": "Organization",
           name: "NowSpike",
@@ -125,7 +127,7 @@ export default async function Home() {
         headline: trend.title,
         image: [trend.image || "https://nowspike.com/images/default-og-image.jpg"],
         datePublished: trend.timestamp,
-        dateModified: trend.timestamp,
+        dateModified: trend.updatedAt,
         author: {
           "@type": "Organization",
           name: "NowSpike",
@@ -203,7 +205,7 @@ export default async function Home() {
                     Read More
                   </Link>
                   <span className="text-xs sm:text-sm lg:text-base text-[var(--background)] font-medium bg-white/10 px-3 py-1 rounded-lg">
-                    Updated {hero.timestamp}
+                    Updated {formatDistanceToNow(new Date(hero.timestamp), { addSuffix: true })}
                   </span>
                 </div>
               </div>
@@ -227,30 +229,27 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 lg:mb-6 flex items-center flex-wrap">
-          Trending Now
-          <span className="ml-2 text-xs sm:text-sm lg:text-base text-[var(--soft-blue)]">({nonHeroTrends.length} active trends)</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
-          {nonHeroTrends.slice(0, 10).map((trend) => (
-            <TrendCard key={trend.slug} {...trend} />
-          ))}
-        </div>
-      </section>
+      {/* Use the new TrendingNow component */}
+      <TrendingNow initialTrends={nonHeroTrends} />
 
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 sm:mb-6 lg:mb-8">
           Explore by Category
         </h2>
         {Object.entries(categories).map(([category, items]) => (
-          <div key={category} className="mb-8 sm:mb-12 lg:mb-16" id={category.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}>
+          <div
+            key={category}
+            className="mb-8 sm:mb-12 lg:mb-16"
+            id={category.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}
+          >
             <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold font-[--font-poppins] text-[var(--navy-blue)] capitalize mb-3 sm:mb-4 lg:mb-6">
               {category}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-              {items.slice(0, 4).map((trend) => (
-                <TrendCard key={trend.slug} {...trend} />
+            <div className="flex overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[var(--soft-blue)] scrollbar-track-gray-200 gap-4 sm:gap-6 pb-4">
+              {items.map((trend) => (
+                <div key={trend.slug} className="flex-shrink-0 w-64 sm:w-72 lg:w-80">
+                  <TrendCard {...trend} />
+                </div>
               ))}
             </div>
           </div>
@@ -264,7 +263,10 @@ export default async function Home() {
           </h2>
           <div className="space-y-6 lg:space-y-8">
             {nonHeroTrends.slice(0, 2).map((trend) => (
-              <div key={trend.slug} className="bg-[var(--white)] p-4 sm:p-6 lg:p-8 rounded-xl shadow-md flex flex-col lg:flex-row gap-4 lg:gap-6 hover:shadow-lg transition-shadow">
+              <div
+                key={trend.slug}
+                className="bg-[var(--white)] p-4 sm:p-6 lg:p-8 rounded-xl shadow-md flex flex-col lg:flex-row gap-4 lg:gap-6 hover:shadow-lg transition-shadow"
+              >
                 <div className="w-full lg:w-1/3">
                   <TrendImage
                     src={trend.image || "/images/placeholder.jpg"}
@@ -275,9 +277,14 @@ export default async function Home() {
                   />
                 </div>
                 <div className="w-full lg:w-2/3">
-                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[var(--navy-blue)]">{trend.title}</h3>
+                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[var(--navy-blue)]">
+                    {trend.title}
+                  </h3>
                   <p className="text-[var(--gray)] text-xs sm:text-sm lg:text-base">{trend.teaser}</p>
-                  <Link href={`/trends/${trend.slug}`} className="text-[var(--soft-blue)] hover:underline text-sm sm:text-base lg:text-lg inline-block mt-2 lg:mt-4">
+                  <Link
+                    href={`/trends/${trend.slug}`}
+                    className="text-[var(--soft-blue)] hover:underline text-sm sm:text-base lg:text-lg inline-block mt-2 lg:mt-4"
+                  >
                     Read Full Story
                   </Link>
                 </div>
@@ -291,14 +298,19 @@ export default async function Home() {
           </h2>
           <ul className="space-y-3 sm:space-y-4 lg:space-y-6">
             {nonHeroTrends.slice(0, 5).map((trend) => (
-              <li key={trend.slug} className="text-xs sm:text-sm lg:text-base flex flex-row gap-1 sm:gap-2 lg:gap-3">
+              <li
+                key={trend.slug}
+                className="text-xs sm:text-sm lg:text-base flex flex-row gap-1 sm:gap-2 lg:gap-3"
+              >
                 <Link
                   href={`/trends/${trend.slug}`}
                   className="text-[var(--soft-blue)] hover:underline hover:text-[var(--navy-blue)] flex flex-row items-center gap-1 sm:gap-2 lg:gap-3 w-full"
                 >
                   <span className="flex-1 truncate">{trend.title}</span>
                   <span className="flex-shrink-0 whitespace-nowrap">
-                    <span className="text-[var(--muted-blue)]">Updated {trend.timestamp}</span>
+                    <span className="text-[var(--muted-blue)]">
+                      Updated {formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true })}
+                    </span>
                   </span>
                 </Link>
               </li>
@@ -314,8 +326,12 @@ export default async function Home() {
 
       <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16 bg-[var(--navy-blue)] text-white rounded-xl shadow-md">
         <div className="text-center">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] mb-3 sm:mb-4 lg:mb-6">Stay Ahead of the Trends</h2>
-          <p className="text-base sm:text-lg lg:text-xl mb-4 sm:mb-6 lg:mb-8 opacity-90">Subscribe for daily updates on what’s spiking now.</p>
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] mb-3 sm:mb-4 lg:mb-6">
+            Stay Ahead of the Trends
+          </h2>
+          <p className="text-base sm:text-lg lg:text-xl mb-4 sm:mb-6 lg:mb-8 opacity-90">
+            Subscribe for daily updates on what’s spiking now.
+          </p>
           <form className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 lg:gap-6 max-w-md lg:max-w-lg mx-auto">
             <input
               type="email"

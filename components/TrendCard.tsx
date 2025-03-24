@@ -2,6 +2,7 @@
 import { Trend } from "@/types/trend";
 import Link from "next/link";
 import TrendImage from "./TrendImage";
+import { formatDistanceToNow } from "date-fns"; // Import date-fns
 
 export default function TrendCard({
   title,
@@ -12,6 +13,14 @@ export default function TrendCard({
   category,
   image,
 }: Trend) {
+  // Format the timestamp with error handling
+  let formattedTimestamp = "Unknown Date";
+  try {
+    formattedTimestamp = formatDistanceToNow(new Date(timestamp), { addSuffix: true });
+  } catch (error) {
+    console.warn(`Invalid timestamp for trend ${slug}: ${timestamp}`);
+  }
+
   return (
     <Link href={`/trends/${slug}`} className="block">
       <div className="bg-[var(--white)] p-4 sm:p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col gap-3 sm:gap-4">
@@ -39,7 +48,7 @@ export default function TrendCard({
               {category}
             </span>
             <span className="text-xs text-[var(--muted-blue)]">
-              Updated {timestamp}
+              Updated {formattedTimestamp}
             </span>
           </div>
         </div>

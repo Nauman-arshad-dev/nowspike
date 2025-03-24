@@ -2,12 +2,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { getServerSession } from "next-auth";
-import { put } from "@vercel/blob"; // Import Vercel Blob
+import { put } from "@vercel/blob";
 import { ContentBlock } from "@/types/trend";
 import { TrendModel } from "@/lib/models/trend";
 import { authOptions } from "@/lib/auth";
 
-// Define the type for the MongoDB query
 interface TrendQuery {
   category?: string;
 }
@@ -15,30 +14,24 @@ interface TrendQuery {
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  // Get query parameters for pagination and filtering
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "10", 10);
   const category = searchParams.get("category") || undefined;
   const skip = (page - 1) * limit;
 
-  // Build the query with a specific type
   const query: TrendQuery = {};
   if (category && category !== "undefined") {
     query.category = category;
   }
 
-  // Fetch total number of trends for pagination metadata
   const totalTrends = await TrendModel.countDocuments(query);
-
-  // Fetch trends for the current page
   const trends = await TrendModel.find(query)
     .sort({ updatedAt: -1 })
     .skip(skip)
     .limit(limit)
     .lean();
 
-  // Calculate pagination metadata
   const totalPages = Math.ceil(totalTrends / limit);
 
   return NextResponse.json(
@@ -55,7 +48,6 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  // Validate environment variables
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     console.error("BLOB_READ_WRITE_TOKEN is not set");
     return NextResponse.json(
@@ -81,9 +73,8 @@ export async function POST(req: NextRequest) {
     const imageFile = formData.get("image") as File | null;
     let imagePath = "/images/placeholder.jpg";
 
-    // Upload the hero image to Vercel Blob
     if (imageFile instanceof File) {
-      const maxSize = 4.5 * 1024 * 1024; // 4.5MB (Vercel limit for server-side uploads)
+      const maxSize = 4.5 * 1024 * 1024;
       if (imageFile.size > maxSize) {
         throw new Error("Hero image exceeds 4.5MB limit");
       }
@@ -112,7 +103,7 @@ export async function POST(req: NextRequest) {
         if (fileKey) {
           const imageFile = formData.get(fileKey) as File | null;
           if (imageFile instanceof File) {
-            const maxSize = 4.5 * 1024 * 1024; // 4.5MB
+            const maxSize = 4.5 * 1024 * 1024;
             if (imageFile.size > maxSize) {
               throw new Error(`Content image ${i} exceeds 4.5MB limit`);
             }
@@ -136,7 +127,7 @@ export async function POST(req: NextRequest) {
         if (fileKey) {
           const imageFile = formData.get(fileKey) as File | null;
           if (imageFile instanceof File) {
-            const maxSize = 4.5 * 1024 * 1024; // 4.5MB
+            const maxSize = 4.5 * 1024 * 1024;
             if (imageFile.size > maxSize) {
               throw new Error(`Paragraph image ${i} exceeds 4.5MB limit`);
             }
@@ -157,13 +148,24 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Validate the timestamp
+    let timestamp = formData.get("timestamp") as string;
+    if (!timestamp) {
+      throw new Error("Timestamp is required");
+    }
+    const parsedDate = new Date(timestamp);
+    if (isNaN(parsedDate.getTime())) {
+      throw new Error(`Invalid timestamp format: ${timestamp}. Must be a valid ISO 8601 string.`);
+    }
+    timestamp = parsedDate.toISOString();
+
     const trend = new TrendModel({
       title: formData.get("title") as string,
       teaser: formData.get("teaser") as string,
       slug: slug,
       spike: formData.get("spike") as string,
       content: content.length > 0 ? content : [{ type: "paragraph", value: "", title: "" }],
-      timestamp: formData.get("timestamp") as string,
+      timestamp,
       category: formData.get("category") as string,
       isHero: formData.get("isHero") === "true",
       relatedTopics: JSON.parse(formData.get("relatedTopics") as string || "[]"),
