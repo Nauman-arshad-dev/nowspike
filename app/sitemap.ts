@@ -14,7 +14,7 @@ async function getTrends(): Promise<Trend[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://nowspike.com";
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://www.nowspike.com";
   const trends = await getTrends();
 
   const staticPages: MetadataRoute.Sitemap = [
