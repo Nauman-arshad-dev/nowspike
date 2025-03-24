@@ -1,10 +1,13 @@
 // E:\nauman\NowSpike\frontend\utils\notifyGoogleIndexing.js
 const { google } = require("googleapis");
 
+// Parse the credentials from the environment variable
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS || "{}");
+
 async function notifyGoogleIndexing(url, type = "URL_UPDATED") {
   try {
     const auth = new google.auth.GoogleAuth({
-      keyFile: "credentials/fit-boulevard-454715-q4-90675e04a4f2.json",
+      credentials: credentials, // Use the parsed JSON object from the environment variable
       scopes: ["https://www.googleapis.com/auth/indexing"],
     });
 
