@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const topTrends = trends.map((t: Trend) => t.title).join(", ");
 
   const baseMetadata: Metadata = {
-    metadataBase: new URL("https://www.nowspike.com"), // Use canonical domain
+    metadataBase: new URL("https://www.nowspike.com"),
     title: {
       template: "%s | NowSpike",
       default: "NowSpike - Today’s Trending Topics",
@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: "Discover what’s spiking now. Updated daily from Google.",
     keywords: "trends, nowspike, daily news, google, sports, entertainment",
     alternates: {
-      canonical: "https://www.nowspike.com", // Use alternates.canonical
+      canonical: "https://www.nowspike.com",
     },
     openGraph: {
       title: "NowSpike - Today’s Trending Topics",
@@ -86,10 +86,10 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={`${poppins.variable} antialiased`}>
+      <body className={`${poppins.variable} antialiased min-h-screen flex flex-col`}>
         <AnalyticsScripts />
-        <header className="bg-[var(--navy-blue)] text-white py-4 px-4 fixed top-0 left-0 w-full z-50 shadow-md">
-          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+        <header className="bg-[var(--navy-blue)] text-[var(--white)] py-3 px-4 fixed top-0 left-0 w-full z-50 shadow-md">
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
             <Link href="/" className="hover:text-[var(--soft-blue)] transition flex items-center gap-2" title="Home">
               <Image
                 src="/logo.svg"
@@ -103,13 +103,13 @@ export default async function RootLayout({
                 <p className="text-xs sm:text-sm opacity-80">What’s spiking now</p>
               </div>
             </Link>
-            <nav className="w-full sm:w-auto hidden sm:block">
-              <div className="flex items-center gap-4 justify-center">
+            <nav className="w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center">
                 <div className="relative w-full sm:w-64">
                   <input
                     type="text"
                     placeholder="Search trends..."
-                    className="px-3 py-2 rounded-lg bg-[var(--white)] text-[var(--navy-blue)] placeholder-[var(--gray)] w-full focus:outline-none focus:ring-2 focus:ring-[var(--soft-blue)] text-sm sm:text-base"
+                    className="px-3 py-2 rounded-lg bg-[var(--white)] text-[var(--navy-blue)] placeholder-[var(--gray)] w-full focus:outline-none focus:ring-2 focus:ring-[var(--soft-blue)] text-sm sm:text-base transition-colors"
                   />
                   <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--gray)]" />
                 </div>
@@ -118,12 +118,12 @@ export default async function RootLayout({
                     <button className="text-sm sm:text-base hover:text-[var(--soft-blue)] transition">
                       Top Trends
                     </button>
-                    <div className="absolute hidden group-hover:block bg-white text-[var(--navy-blue)] rounded-lg shadow-md mt-2 p-2">
+                    <div className="absolute hidden group-hover:block bg-[var(--white)] text-[var(--navy-blue)] rounded-lg shadow-md mt-2 p-2 w-48 sm:w-64">
                       {trends.slice(0, 5).map((trend) => (
                         <Link
                           key={trend.slug}
                           href={`/trends/${trend.slug}`}
-                          className="block px-2 py-1 hover:bg-[var(--soft-blue)] hover:text-white rounded text-sm"
+                          className="block px-2 py-1 hover:bg-[var(--soft-blue)] hover:text-[var(--white)] rounded text-sm transition-colors"
                         >
                           {trend.title}
                         </Link>
@@ -136,38 +136,38 @@ export default async function RootLayout({
           </div>
         </header>
 
-        <main className="max-w-6xl mx-auto py-10 sm:py-20 px-2 sm:px-4">
+        <main className="max-w-6xl mx-auto py-16 sm:py-20 px-4 sm:px-6 flex-grow">
           <ClientProvider>{children}</ClientProvider>
         </main>
 
-        <footer className="bg-[var(--navy-blue)] text-white py-4 sm:py-6 text-center text-xs sm:text-sm">
-          <div className="max-w-6xl mx-auto flex flex-col items-center gap-3 sm:gap-6 lg:gap-1">
+        <footer className="bg-[var(--navy-blue)] text-[var(--white)] py-4 sm:py-6 text-center text-xs sm:text-sm">
+          <div className="max-w-6xl mx-auto flex flex-col items-center gap-4 sm:gap-6">
             <div className="flex items-center justify-center gap-2 sm:gap-4">
               <Image
                 src="/logo.svg"
                 alt="NowSpike Logo"
                 width={24}
                 height={24}
-                className="w-5 sm:w-10"
+                className="w-5 sm:w-6"
               />
               <p>© 2025 NowSpike. All rights reserved.</p>
             </div>
-            <div className="flex flex-row gap-3 sm:gap-8 justify-center">
-              <a href="https://twitter.com" className="hover:text-[var(--soft-blue)] p-2 sm:p-3 transition-colors">
-                <FaTwitter size={20} className="sm:size-28 lg:size-8 " />
+            <div className="flex flex-row gap-4 sm:gap-6 justify-center">
+              <a href="https://twitter.com" className="hover:text-[var(--soft-blue)] p-2 transition-colors">
+                <FaTwitter size={20} className="sm:size-6" />
               </a>
-              <a href="https://facebook.com" className="hover:text-[var(--soft-blue)] p-2 sm:p-3 transition-colors">
-                <FaFacebook size={20} className="sm:size-28 lg:size-8 " />
+              <a href="https://facebook.com" className="hover:text-[var(--soft-blue)] p-2 transition-colors">
+                <FaFacebook size={20} className="sm:size-6" />
               </a>
             </div>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-6 sm:flex-row">
-              <a href="/about" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-lg sm:px-4 sm:py-2 whitespace-nowrap">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-6">
+              <a href="/about" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-sm sm:px-4 sm:py-2 whitespace-nowrap">
                 About
               </a>
-              <a href="/privacy" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-lg sm:px-4 sm:py-2 whitespace-nowrap">
+              <a href="/privacy" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-sm sm:px-4 sm:py-2 whitespace-nowrap">
                 Privacy
               </a>
-              <a href="/contact" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-lg sm:px-4 sm:py-2 whitespace-nowrap">
+              <a href="/contact" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-sm sm:px-4 sm:py-2 whitespace-nowrap">
                 Contact
               </a>
             </div>

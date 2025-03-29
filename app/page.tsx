@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? hero.teaser
       : "Explore the latest trending topics updated daily on NowSpike—your go-to source for Arts, Tech, Health, Sports, Autos, Beauty, and more from Google.",
     alternates: {
-      canonical: "https://www.nowspike.com", // Use alternates.canonical
+      canonical: "https://www.nowspike.com",
     },
     keywords: [
       "trending news",
@@ -154,17 +154,17 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
-      <div className="bg-gradient-to-r from-[var(--navy-blue)] to-[#1A3A6D] text-white py-3 sm:py-4 shadow-lg">
-        <div className="max-w-7xl mx-auto flex items-center px-2 sm:px-6">
-          <span className="bg-[var(--breaking-red)] text-white font-bold text-xs sm:text-sm px-3 sm:px-4 py-1 rounded-full shrink-0">
+      <div className="bg-gradient-to-r from-[var(--navy-blue)] to-[#1A3A6D] text-[var(--white)] py-2 sm:py-3 shadow-lg">
+        <div className="max-w-7xl mx-auto flex items-center px-2 sm:px-4">
+          <span className="bg-[var(--breaking-red)] text-[var(--white)] font-bold text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full shrink-0">
             BREAKING
           </span>
-          <div className="flex-1 overflow-hidden ml-2 sm:ml-4">
-            <div className="animate-marquee whitespace-nowrap flex items-center gap-4 sm:gap-8">
+          <div className="flex-1 overflow-hidden ml-2 sm:ml-3">
+            <div className="animate-marquee whitespace-nowrap flex items-center gap-3 sm:gap-6">
               {tickerTrends.map((item, idx) => (
                 <span
                   key={idx}
-                  className="text-xs sm:text-sm lg:text-base font-medium text-[var(--white)] hover:text-[var(--soft-blue)] transition-colors duration-300"
+                  className="text-xs sm:text-sm font-medium text-[var(--white)] hover:text-[var(--soft-blue)] transition-colors duration-300"
                 >
                   {item}
                 </span>
@@ -175,37 +175,37 @@ export default async function Home() {
       </div>
 
       {hero && (
-        <section className="relative bg-[var(--navy-blue)] text-white py-8 sm:py-12 lg:py-10 px-2 sm:px-6 lg:px-8">
+        <section className="relative bg-[var(--navy-blue)] text-[var(--white)] py-6 sm:py-8 lg:py-12 px-2 sm:px-4 lg:px-6">
           <div className="max-w-7xl mx-auto relative z-10">
-            <div className="flex flex-col items-center gap-6 sm:gap-8 lg:gap-10">
-              <div className="w-full">
+            <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-6 lg:gap-8">
+              <div className="w-full lg:w-1/2">
                 <TrendImage
                   src={hero.image || "/images/placeholder.jpg"}
                   alt={hero.title}
                   width={1200}
                   height={600}
                   priority
-                  className="w-full h-56 sm:h-72 lg:h-[500px] object-cover rounded-xl shadow-2xl"
+                  className="w-full h-56 sm:h-72 lg:h-96 object-cover rounded-xl shadow-2xl"
                 />
               </div>
-              <div className="w-full mx-auto text-center lg:text-left">
-                <span className="inline-block bg-[var(--soft-blue)] text-white text-xs sm:text-sm lg:text-base font-semibold px-3 py-1 rounded-full mb-3 sm:mb-4 lg:mb-6">
+              <div className="w-full lg:w-1/2 text-center lg:text-left">
+                <span className="inline-block bg-[var(--soft-blue)] text-[var(--white)] text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full mb-2 sm:mb-3 lg:mb-4">
                   {hero.spike}
                 </span>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-[--font-poppins] mb-2 sm:mb-3 lg:mb-4 leading-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-[--font-poppins] mb-2 sm:mb-3 lg:mb-4 leading-tight">
                   {hero.title}
                 </h1>
-                <p className="text-base sm:text-lg lg:text-xl opacity-90 max-w-2xl mx-auto lg:mx-0 line-clamp-2">
+                <p className="text-sm sm:text-base lg:text-lg opacity-90 max-w-xl mx-auto lg:mx-0 line-clamp-3">
                   {hero.teaser}
                 </p>
-                <div className="mt-4 sm:mt-6 lg:mt-8 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4 sm:gap-6 lg:gap-8">
+                <div className="mt-3 sm:mt-4 lg:mt-6 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4">
                   <Link
                     href={`/trends/${hero.slug}`}
-                    className="inline-block bg-[var(--soft-blue)] text-white font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition-all duration-300 shadow-md"
+                    className="inline-block bg-[var(--soft-blue)] text-[var(--white)] font-bold text-sm sm:text-base px-4 sm:px-5 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition-all duration-300 shadow-md"
                   >
                     Read More
                   </Link>
-                  <span className="text-xs sm:text-sm lg:text-base text-[var(--background)] font-medium bg-white/10 px-3 py-1 rounded-lg">
+                  <span className="text-xs sm:text-sm text-[var(--white)] font-medium bg-white/10 px-2 sm:px-3 py-1 rounded-lg">
                     Updated {formatDistanceToNow(new Date(hero.timestamp), { addSuffix: true })}
                   </span>
                 </div>
@@ -216,13 +216,13 @@ export default async function Home() {
         </section>
       )}
 
-      <section className="max-w-7xl mx-auto py-3 sm:py-4 px-2 sm:px-6 sticky top-20 sm:top-16 bg-gradient-to-b from-[var(--white)] to-gray-50 z-40 shadow-md">
+      <section className="max-w-7xl mx-auto py-2 sm:py-3 px-2 sm:px-4 sticky top-16 sm:top-20 bg-gradient-to-b from-[var(--white)] to-gray-50 z-40 shadow-md">
         <div className="flex items-center overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[var(--soft-blue)] scrollbar-track-gray-200 pb-2">
           {uniqueCategories.map((cat) => (
             <Link
               key={cat}
               href={`#${cat.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`}
-              className="px-3 sm:px-4 py-1 sm:py-2 bg-[var(--navy-blue)] text-white rounded-full hover:bg-[var(--soft-blue)] transition-all duration-300 text-xs sm:text-sm lg:text-base font-medium whitespace-nowrap mx-1 sm:mx-2 shadow-sm hover:shadow-md"
+              className="px-2 sm:px-3 py-1 sm:py-1.5 bg-[var(--navy-blue)] text-[var(--white)] rounded-full hover:bg-[var(--soft-blue)] transition-all duration-300 text-xs sm:text-sm font-medium whitespace-nowrap mx-1 sm:mx-1.5 shadow-sm hover:shadow-md"
             >
               {cat}
             </Link>
@@ -232,22 +232,22 @@ export default async function Home() {
 
       <TrendingNow initialTrends={nonHeroTrends} />
 
-      <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 sm:mb-6 lg:mb-8">
+      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
           Explore by Category
         </h2>
         {Object.entries(categories).map(([category, items]) => (
           <div
             key={category}
-            className="mb-8 sm:mb-12 lg:mb-16"
+            className="mb-6 sm:mb-8 lg:mb-12"
             id={category.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}
           >
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold font-[--font-poppins] text-[var(--navy-blue)] capitalize mb-3 sm:mb-4 lg:mb-6">
+            <h3 className="text-base sm:text-lg lg:text-xl font-semibold font-[--font-poppins] text-[var(--navy-blue)] capitalize mb-2 sm:mb-3 lg:mb-4">
               {category}
             </h3>
-            <div className="flex overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[var(--soft-blue)] scrollbar-track-gray-200 gap-4 sm:gap-6 pb-4">
+            <div className="flex overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[var(--soft-blue)] scrollbar-track-gray-200 gap-3 sm:gap-4 pb-4">
               {items.map((trend) => (
-                <div key={trend.slug} className="flex-shrink-0 w-64 sm:w-72 lg:w-80">
+                <div key={trend.slug} className="flex-shrink-0 w-60 sm:w-64 lg:w-72">
                   <TrendCard {...trend} />
                 </div>
               ))}
@@ -256,50 +256,51 @@ export default async function Home() {
         ))}
       </section>
 
-      <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 sm:mb-6 lg:mb-8">
+      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
           Related Categories
         </h2>
-        <div className="flex flex-wrap gap-4 sm:gap-6">
+        <div className="flex flex-wrap gap-3 sm:gap-4">
           {uniqueCategories.slice(0, 5).map((cat) => (
             <Link
               key={cat}
               href={`#${cat.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`}
-              className="text-[var(--soft-blue)] hover:underline text-sm sm:text-base lg:text-lg"
+              className="text-[var(--soft-blue)] hover:underline text-sm sm:text-base"
             >
               {cat}
             </Link>
           ))}
         </div>
       </section>
-      <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16 lg:flex lg:flex-row lg:gap-12">
-        <div className="w-full lg:w-2/3 mb-8 lg:mb-0">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 lg:mb-6">
+
+      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12 lg:flex lg:flex-row lg:gap-6">
+        <div className="w-full lg:w-2/3 mb-6 lg:mb-0">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
             Featured Stories
           </h2>
-          <div className="space-y-6 lg:space-y-8">
+          <div className="space-y-4 sm:space-y-6">
             {nonHeroTrends.slice(0, 2).map((trend) => (
               <div
                 key={trend.slug}
-                className="bg-[var(--white)] p-4 sm:p-6 lg:p-8 rounded-xl shadow-md flex flex-col lg:flex-row gap-4 lg:gap-6 hover:shadow-lg transition-shadow"
+                className="bg-[var(--white)] p-3 sm:p-4 lg:p-6 rounded-xl shadow-md flex flex-col sm:flex-row gap-3 sm:gap-4 hover:shadow-lg transition-shadow"
               >
-                <div className="w-full lg:w-1/3">
+                <div className="w-full sm:w-1/3">
                   <TrendImage
                     src={trend.image || "/images/placeholder.jpg"}
                     alt={trend.title}
                     width={300}
                     height={150}
-                    className="w-full h-20 sm:h-24 lg:h-32 object-cover rounded-lg"
+                    className="w-full h-20 sm:h-24 lg:h-28 object-cover rounded-lg"
                   />
                 </div>
-                <div className="w-full lg:w-2/3">
-                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[var(--navy-blue)]">
+                <div className="w-full sm:w-2/3">
+                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-[var(--navy-blue)] line-clamp-2">
                     {trend.title}
                   </h3>
-                  <p className="text-[var(--gray)] text-xs sm:text-sm lg:text-base">{trend.teaser}</p>
+                  <p className="text-[var(--gray)] text-xs sm:text-sm line-clamp-2">{trend.teaser}</p>
                   <Link
                     href={`/trends/${trend.slug}`}
-                    className="text-[var(--soft-blue)] hover:underline text-sm sm:text-base lg:text-lg inline-block mt-2 lg:mt-4"
+                    className="text-[var(--soft-blue)] hover:underline text-xs sm:text-sm inline-block mt-2"
                   >
                     Read Full Story
                   </Link>
@@ -309,52 +310,50 @@ export default async function Home() {
           </div>
         </div>
         <div className="w-full lg:w-1/3">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-4 lg:mb-6">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
             Latest Updates
           </h2>
-          <ul className="space-y-3 sm:space-y-4 lg:space-y-6">
+          <ul className="space-y-2 sm:space-y-3">
             {nonHeroTrends.slice(0, 5).map((trend) => (
               <li
                 key={trend.slug}
-                className="text-xs sm:text-sm lg:text-base flex flex-row gap-1 sm:gap-2 lg:gap-3"
+                className="text-xs sm:text-sm flex flex-row gap-1 sm:gap-2"
               >
                 <Link
                   href={`/trends/${trend.slug}`}
-                  className="text-[var(--soft-blue)] hover:underline hover:text-[var(--navy-blue)] flex flex-row items-center gap-1 sm:gap-2 lg:gap-3 w-full"
+                  className="text-[var(--soft-blue)] hover:underline hover:text-[var(--navy-blue)] flex flex-row items-center gap-1 sm:gap-2 w-full"
                 >
                   <span className="flex-1 truncate">{trend.title}</span>
-                  <span className="flex-shrink-0 whitespace-nowrap">
-                    <span className="text-[var(--muted-blue)]">
-                      Updated {formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true })}
-                    </span>
+                  <span className="flex-shrink-0 whitespace-nowrap text-[var(--muted-blue)]">
+                    Updated {formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true })}
                   </span>
                 </Link>
               </li>
             ))}
           </ul>
-          <div className="mt-4 sm:mt-6 lg:mt-8 bg-[var(--white)] p-3 sm:p-4 lg:p-6 rounded-xl shadow-md">
-            <p className="text-xs sm:text-sm lg:text-base text-[var(--gray)]">
+          <div className="mt-4 sm:mt-6 bg-[var(--white)] p-3 sm:p-4 rounded-xl shadow-md">
+            <p className="text-xs sm:text-sm text-[var(--gray)]">
               Join <strong>10K+ readers</strong> getting daily trend updates!
             </p>
           </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto py-8 sm:py-12 px-2 sm:px-6 lg:py-16 bg-[var(--navy-blue)] text-white rounded-xl shadow-md">
+      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12 bg-[var(--navy-blue)] text-[var(--white)] rounded-xl shadow-md">
         <div className="text-center">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-[--font-poppins] mb-3 sm:mb-4 lg:mb-6">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] mb-2 sm:mb-3 lg:mb-4">
             Stay Ahead of the Trends
           </h2>
-          <p className="text-base sm:text-lg lg:text-xl mb-4 sm:mb-6 lg:mb-8 opacity-90">
+          <p className="text-sm sm:text-base lg:text-lg mb-3 sm:mb-4 lg:mb-6 opacity-90">
             Subscribe for daily updates on what’s spiking now.
           </p>
-          <form className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 lg:gap-6 max-w-md lg:max-w-lg mx-auto">
+          <form className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Enter your email"
-              className="px-3 sm:px-4 py-2 rounded-lg bg-[var(--white)] text-[var(--navy-blue)] placeholder-[var(--gray)] w-full focus:outline-none focus:ring-2 focus:ring-[var(--soft-blue)] text-sm sm:text-base lg:text-lg"
+              className="px-3 sm:px-4 py-2 rounded-lg bg-[var(--white)] text-[var(--navy-blue)] placeholder-[var(--gray)] w-full focus:outline-none focus:ring-2 focus:ring-[var(--soft-blue)] text-sm sm:text-base"
             />
-            <button className="bg-[var(--soft-blue)] px-4 sm:px-6 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition font-semibold text-sm sm:text-base lg:text-lg">
+            <button className="bg-[var(--soft-blue)] px-4 sm:px-5 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition font-semibold text-sm sm:text-base">
               Subscribe
             </button>
           </form>

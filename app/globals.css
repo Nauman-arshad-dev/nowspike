@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F5F7FA;
-  --foreground: #333333;
-  --navy-blue: #305aa1;
-  --soft-blue: #4A90E2;
+  --background: #F5F7FA; /* Light gray background for light mode */
+  --foreground: #1A1A1A; /* Darker text for better contrast in light mode */
+  --navy-blue: #2B4A8A; /* Slightly lighter navy blue for better visibility */
+  --soft-blue: #4A90E2; /* Keep soft blue for hover effects */
   --white: #FFFFFF;
-  --gray: #6B7280;
+  --gray: #6B7280; /* Gray for secondary text */
   --dark-navy: #1A3A6D;
   --breaking-red: #DC2626;
   --muted-blue: #A3BFFA;
@@ -19,20 +19,102 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #305aa1;
-    --foreground: #F5F7FA;
-    --navy-blue: #305aa1;
-    --soft-blue: #4A90E2;
-    --white: #FFFFFF;
-    --gray: #A1A8B5;
-    --dark-navy: #1A3A6D;
-    --breaking-red: #DC2626;
+    --background: #1A1A1A; /* Darker background for dark mode */
+    --foreground: #E5E7EB; /* Light gray text for better contrast in dark mode */
+    --navy-blue: #3B5CA8; /* Lighter navy blue for dark mode */
+    --soft-blue: #60A5FA; /* Slightly lighter soft blue for dark mode */
+    --white: #F5F5F5; /* Off-white for dark mode */
+    --gray: #9CA3AF; /* Lighter gray for secondary text in dark mode */
+    --dark-navy: #1E3A8A;
+    --breaking-red: #EF4444; /* Slightly lighter red for dark mode */
     --muted-blue: #93C5FD;
   }
+
+  /* Ensure text colors adapt to dark mode */
   .text-gray-600 {
-    color: #D1D5DB;
+    color: #D1D5DB !important; /* Force light gray for secondary text */
+  }
+
+  /* Adjust header and footer background in dark mode */
+  header,
+  footer {
+    background: var(--dark-navy) !important; /* Use a darker navy for header/footer */
+  }
+
+  /* Adjust input field in dark mode */
+  input {
+    background: #2D2D2D !important; /* Darker input background */
+    color: var(--foreground) !important;
+    border: 1px solid var(--gray) !important;
+  }
+
+  /* Adjust dropdown menu in dark mode */
+  .group-hover\:block {
+    background: #2D2D2D !important; /* Darker dropdown background */
+    color: var(--foreground) !important;
+  }
+
+  /* Ensure links in dropdown are readable */
+  .group-hover\:block a {
+    color: var(--foreground) !important;
+  }
+
+  /* Adjust hover effects in dark mode */
+  .hover\:bg-\[var\(--soft-blue\)\]:hover {
+    background: var(--soft-blue) !important;
+  }
+
+  /* Adjust hero section in dark mode */
+  .bg-\[var\(--navy-blue\)\] {
+    background: var(--dark-navy) !important;
+  }
+
+  /* Adjust ticker background in dark mode */
+  .bg-gradient-to-r {
+    background: linear-gradient(to right, var(--dark-navy), #2D2D2D) !important;
+  }
+
+  /* Adjust category navigation background in dark mode */
+  .bg-gradient-to-b {
+    background: linear-gradient(to bottom, #2D2D2D, #3D3D3D) !important;
+  }
+
+  /* Adjust card background in dark mode */
+  .bg-\[var\(--white\)\] {
+    background: #2D2D2D !important;
+  }
+
+  /* Adjust text colors for better contrast */
+  .text-\[var\(--navy-blue\)\] {
+    color: var(--soft-blue) !important;
+  }
+
+  /* Adjust button hover effects in dark mode */
+  .hover\:bg-\[var\(--white\)\]:hover {
+    background: #3D3D3D !important;
+    color: var(--foreground) !important;
+  }
+
+  /* Adjust scrollbar colors in dark mode */
+  .scrollbar-thumb-\[var\(--soft-blue\)\] {
+    scrollbar-color: var(--soft-blue) #4D4D4D !important;
+  }
+
+  .scrollbar-track-gray-200 {
+    scrollbar-color: var(--soft-blue) #4D4D4D !important;
+  }
+
+  /* Adjust specific elements for trend page */
+  .bg-white\/10 {
+    background: rgba(255, 255, 255, 0.1) !important; /* Ensure transparency works in dark mode */
+  }
+
+  /* Adjust social buzz section in dark mode */
+  .text-\[var\(--foreground\)\] {
+    color: var(--foreground) !important;
   }
 }
 
@@ -40,8 +122,10 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for mode changes */
 }
 
+/* Marquee animation */
 @keyframes marquee {
   0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
@@ -56,4 +140,109 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Improve mobile responsiveness */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px; /* Smaller base font size for mobile */
+  }
+
+  header {
+    padding: 0.5rem 1rem; /* Reduce padding on mobile */
+  }
+
+  footer {
+    padding: 1rem; /* Adjust footer padding */
+  }
+
+  /* Ensure header elements stack properly */
+  .max-w-6xl {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+
+  /* Adjust logo and title size */
+  h1 {
+    font-size: 1.25rem; /* Smaller header title on mobile */
+  }
+
+  p {
+    font-size: 0.75rem; /* Smaller subtitle on mobile */
+  }
+
+  /* Adjust input field size */
+  input {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  /* Adjust footer icons */
+  .sm\:size-28 {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+  }
+
+  .lg\:size-8 {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+  }
+
+  /* Adjust hero section for mobile */
+  .h-56 {
+    height: 12rem !important; /* Smaller hero image on mobile */
+  }
+
+  .text-2xl {
+    font-size: 1.5rem !important; /* Smaller hero title on mobile */
+  }
+
+  .text-base {
+    font-size: 0.875rem !important; /* Smaller hero teaser on mobile */
+  }
+
+  /* Adjust category navigation for mobile */
+  .text-xs {
+    font-size: 0.65rem !important; /* Smaller category links on mobile */
+  }
+
+  .px-3 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  /* Adjust TrendCard image size on mobile */
+  .h-32 {
+    height: 8rem !important; /* Smaller card image on mobile */
+  }
+
+  /* Adjust Featured Stories image size on mobile */
+  .h-20 {
+    height: 6rem !important; /* Smaller featured story image on mobile */
+  }
+
+  /* Trend page specific adjustments */
+  .text-3xl {
+    font-size: 1.75rem !important; /* Smaller main title on mobile */
+  }
+
+  .text-lg {
+    font-size: 0.875rem !important; /* Smaller teaser on mobile */
+  }
+
+  .h-56 {
+    height: 12rem !important; /* Smaller hero image on mobile */
+  }
+
+  .h-64 {
+    height: 14rem !important; /* Smaller video iframe on mobile */
+  }
+
+  .text-xl {
+    font-size: 1.125rem !important; /* Smaller content block titles on mobile */
+  }
+
+  .text-base {
+    font-size: 0.875rem !important; /* Smaller paragraph text on mobile */
+  }
 }
