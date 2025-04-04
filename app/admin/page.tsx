@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import CardDetails from "./CardDetails";
 import CardContent from "./CardContent";
 import { Trend } from "@/types/trend";
-import { formatDistanceToNow } from "date-fns"; // Import date-fns for formatting
+import { formatDistanceToNow } from "date-fns";
 
 interface FormTrend {
   title?: string;
@@ -79,7 +79,6 @@ export default function AdminPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Add confirmation dialog before submitting
     const confirmMessage = editSlug
       ? "Are you sure you want to update this trend?"
       : "Are you sure you want to add this trend?";
@@ -207,6 +206,7 @@ export default function AdminPage() {
         <CardContent
           content={form.content || [{ type: "paragraph", value: "", title: "" }]}
           setContent={(content) => setForm({ ...form, content })}
+          trends={trends} // Pass trends for interlinking
         />
         <div className="mt-4">
           <input

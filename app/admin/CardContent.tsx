@@ -2,6 +2,7 @@
 "use client";
 import { ChangeEvent, useState } from "react";
 import Image from "next/image";
+import { Trend } from "@/types/trend";
 
 interface ContentBlock {
   type: "paragraph" | "image" | "video" | "x-embed";
@@ -14,10 +15,17 @@ interface ContentBlock {
 interface CardContentProps {
   content: ContentBlock[];
   setContent: (content: ContentBlock[]) => void;
+  trends: Trend[]; // Add trends prop for interlinking
 }
 
-export default function CardContent({ content, setContent }: CardContentProps) {
+export default function CardContent({ content, setContent, trends }: CardContentProps) {
   const [newBlockType, setNewBlockType] = useState<"paragraph" | "image" | "video" | "x-embed">("paragraph");
+  const [selectedLinkIndex, setSelectedLinkIndex] = useState<number | null>(null);
+  const [linkText, setLinkText] = useState("");
+  const [linkTarget, setLinkTarget] = useState("");
+  const [linkType, setLinkType] = useState<"trend" | "category" | "custom">("trend");
+
+  const categories = Array.from(new Set(trends.map((trend) => trend.category))).sort();
 
   const addBlock = () => {
     setContent([...content, { type: newBlockType, value: "", title: "" }]);
@@ -39,6 +47,34 @@ export default function CardContent({ content, setContent }: CardContentProps) {
         updateBlock(index, "value", blobUrl);
       }
     }
+  };
+
+  const insertLink = (index: number) => {
+    if (!linkText || !linkTarget) {
+      alert("Please provide both link text and target.");
+      return;
+    }
+
+    let url = "";
+    if (linkType === "trend") {
+      url = `/trends/${linkTarget}`;
+    } else if (linkType === "category") {
+      url = `/category/${linkTarget.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`;
+    } else {
+      url = linkTarget;
+    }
+
+    const linkHtml = `<a href="${url}" class="text-[var(--soft-blue)] hover:underline">${linkText}</a>`;
+    const newContent = [...content];
+    const currentValue = newContent[index].value || "";
+    newContent[index].value = currentValue + (currentValue ? " " : "") + linkHtml;
+    setContent(newContent);
+
+    // Reset link form
+    setSelectedLinkIndex(null);
+    setLinkText("");
+    setLinkTarget("");
+    setLinkType("trend");
   };
 
   return (
@@ -66,6 +102,87 @@ export default function CardContent({ content, setContent }: CardContentProps) {
                 rows={4}
                 required={index === 0 && block.type === "paragraph"}
               />
+              <button
+                type="button"
+                onClick={() => setSelectedLinkIndex(index)}
+                className="text-blue-600 hover:underline mb-2"
+              >
+                Add Link
+              </button>
+              {selectedLinkIndex === index && (
+                <div className="mb-2 p-2 border rounded bg-white">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Insert Link</label>
+                  <input
+                    type="text"
+                    placeholder="Link Text (e.g., Read more about the Sagaing Fault)"
+                    value={linkText}
+                    onChange={(e) => setLinkText(e.target.value)}
+                    className="p-2 border rounded w-full mb-2"
+                  />
+                  <select
+                    value={linkType}
+                    onChange={(e) => setLinkType(e.target.value as "trend" | "category" | "custom")}
+                    className="p-2 border rounded w-full mb-2"
+                  >
+                    <option value="trend">Link to Another Trend</option>
+                    <option value="category">Link to a Category</option>
+                    <option value="custom">Custom URL</option>
+                  </select>
+                  {linkType === "trend" && (
+                    <select
+                      value={linkTarget}
+                      onChange={(e) => setLinkTarget(e.target.value)}
+                      className="p-2 border rounded w-full mb-2"
+                    >
+                      <option value="" disabled>Select a Trend</option>
+                      {trends.map((trend) => (
+                        <option key={trend.slug} value={trend.slug}>
+                          {trend.title}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {linkType === "category" && (
+                    <select
+                      value={linkTarget}
+                      onChange={(e) => setLinkTarget(e.target.value)}
+                      className="p-2 border rounded w-full mb-2"
+                    >
+                      <option value="" disabled>Select a Category</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {linkType === "custom" && (
+                    <input
+                      type="text"
+                      placeholder="Custom URL (e.g., /about)"
+                      value={linkTarget}
+                      onChange={(e) => setLinkTarget(e.target.value)}
+                      className="p-2 border rounded w-full mb-2"
+                    />
+                  )}
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => insertLink(index)}
+                      className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+                    >
+                      Insert Link
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedLinkIndex(null)}
+                      className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600 transition"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
               <input
                 type="file"
                 accept="image/*"

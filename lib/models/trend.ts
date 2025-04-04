@@ -3,9 +3,9 @@ import mongoose, { Schema } from "mongoose";
 
 export interface ContentBlock {
   type: "paragraph" | "image" | "video" | "x-embed";
-  title?: string; // New optional title field
-  value: string;
-  image?: string; // New optional image field for paragraph blocks
+  title?: string;
+  value: string; // For paragraphs, this can now include HTML with <a> tags for interlinking
+  image?: string;
   caption?: string;
 }
 
@@ -30,17 +30,19 @@ const trendSchema = new Schema<Trend>({
   teaser: { type: String, required: true },
   slug: { type: String, required: true, unique: true },
   spike: { type: String, required: true },
-  content: [{
-    type: { type: String, enum: ["paragraph", "image", "video", "x-embed"], required: true },
-    title: { type: String }, // New optional title field
-    value: { type: String, required: true },
-    image: { type: String }, // New optional image field
-    caption: { type: String },
-  }],
+  content: [
+    {
+      type: { type: String, enum: ["paragraph", "image", "video", "x-embed"], required: true },
+      title: { type: String },
+      value: { type: String, required: true }, // Will store HTML for paragraphs with links
+      image: { type: String },
+      caption: { type: String },
+    },
+  ],
   timestamp: { type: String, required: true },
-  category: { 
-    type: String, 
-    required: true, 
+  category: {
+    type: String,
+    required: true,
     enum: [
       "Arts & Entertainment",
       "Autos & Vehicles",
@@ -65,8 +67,8 @@ const trendSchema = new Schema<Trend>({
       "Science",
       "Shopping",
       "Sports",
-      "Travel & Transportation"
-    ]
+      "Travel & Transportation",
+    ],
   },
   isHero: { type: Boolean, default: false },
   relatedTopics: { type: [String] },
