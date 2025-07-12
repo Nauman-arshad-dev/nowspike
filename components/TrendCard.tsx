@@ -1,7 +1,8 @@
+
 import { Trend } from "@/types/trend";
 import Image from "next/image";
 import Link from "next/link";
-import { FaClock, FaEye, FaShareAlt } from "react-icons/fa";
+import { FaClock, FaEye, FaShareAlt, FaTag } from "react-icons/fa";
 
 interface TrendCardProps {
   trend: Trend;
@@ -26,50 +27,59 @@ export default function TrendCard({ trend }: TrendCardProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group hover:scale-105 w-full">
-      {/* Image */}
+    <article className="card card-interactive group">
+      {/* Image Section */}
       {trend.image && (
-        <div className="relative h-48 w-full overflow-hidden">
+        <div className="image-container h-48 mb-4 relative">
           <Image
             src={trend.image}
             alt={trend.title}
             fill
-            className="object-cover group-hover:scale-110 transition-transform duration-500"
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-          <div className="absolute top-4 left-4">
-            <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          {/* Category Badge */}
+          <div className="absolute top-3 left-3">
+            <span className="inline-flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+              <FaTag className="text-xs" />
               {trend.category}
             </span>
           </div>
-          <div className="absolute top-4 right-4">
-            <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+          
+          {/* Spike Badge */}
+          <div className="absolute top-3 right-3">
+            <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
               {trend.spike}
-            </div>
+            </span>
           </div>
         </div>
       )}
 
-      {/* Content */}
-      <div className="p-6">
-        <div className="flex items-center gap-2 mb-3 text-gray-500 dark:text-gray-400 text-sm">
-          <FaClock />
+      {/* Content Section */}
+      <div className="space-y-4">
+        {/* Meta Information */}
+        <div className="card-meta">
+          <FaClock className="text-sm" />
           <span>{new Date(trend.timestamp).toLocaleDateString()}</span>
         </div>
 
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
+        {/* Title */}
+        <h3 className="card-title group-hover:text-blue-600 transition-colors duration-300">
           {trend.title}
         </h3>
 
-        <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm leading-relaxed">
+        {/* Description */}
+        <p className="card-content line-clamp-3">
           {trend.teaser}
         </p>
 
         {/* Actions */}
-        <div className="flex items-center justify-between">
+        <div className="card-actions">
           <Link
             href={`/trends/${trend.slug}`}
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 text-sm flex items-center gap-2"
+            className="btn btn-primary btn-sm"
           >
             <FaEye />
             Read More
@@ -77,13 +87,14 @@ export default function TrendCard({ trend }: TrendCardProps) {
 
           <button
             onClick={handleShare}
-            className="text-gray-500 hover:text-blue-600 transition-colors duration-300 p-2 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg"
+            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-300"
             title="Share this trend"
+            aria-label="Share trend"
           >
             <FaShareAlt />
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -1,11 +1,11 @@
 
 // E:\nauman\NowSpike\frontend\app\layout.tsx
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientProvider from "./ClientProvider";
 import Link from "next/link";
-import { FaSearch, FaTwitter, FaFacebook } from "react-icons/fa";
+import { FaSearch, FaTwitter, FaFacebook, FaHome, FaNewspaper } from "react-icons/fa";
 import Image from "next/image";
 import { Trend } from "@/types/trend";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
@@ -14,10 +14,10 @@ interface TrendsResponse {
   data: Trend[];
 }
 
-const poppins = Poppins({
-  weight: ["400", "700"],
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-inter",
+  display: "swap",
 });
 
 async function fetchTrends(): Promise<Trend[]> {
@@ -87,52 +87,64 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={`${poppins.variable} antialiased min-h-screen flex flex-col overflow-x-hidden`}>
+      <body className={`${inter.variable} antialiased min-h-screen flex flex-col overflow-x-hidden`}>
         <AnalyticsScripts />
         
         {/* Header */}
-        <header className="bg-[var(--navy-blue)] text-[var(--white)] py-3 px-4 fixed top-0 left-0 w-full z-50 shadow-md">
-          <div className="container mx-auto">
-            <div className="flex flex-col lg:flex-row justify-between items-center gap-3">
-              <Link href="/" className="hover:text-[var(--soft-blue)] transition flex items-center gap-2" title="Home">
+        <header className="header fixed top-0 left-0 w-full z-50">
+          <div className="container">
+            <div className="header-content">
+              <Link href="/" className="header-logo" title="NowSpike - Home">
                 <Image
                   src="/logo.svg"
                   alt="NowSpike Logo"
-                  width={40}
-                  height={40}
-                  className="hover:opacity-90 transition-opacity w-8 lg:w-10"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
                 />
                 <div>
-                  <h1 className="text-lg lg:text-xl font-bold">NowSpike</h1>
-                  <p className="text-xs lg:text-sm opacity-80">What&apos;s spiking now</p>
+                  <span className="text-xl font-bold">NowSpike</span>
+                  <p className="text-sm opacity-90 hidden sm:block">What&apos;s spiking now</p>
                 </div>
               </Link>
               
-              <nav className="w-full lg:w-auto">
-                <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-4 justify-center">
-                  <div className="relative w-full lg:w-64">
-                    <input
-                      type="text"
-                      placeholder="Search trends..."
-                      className="px-3 py-2 rounded-lg bg-[var(--white)] text-[var(--navy-blue)] placeholder-[var(--gray)] w-full focus:outline-none focus:ring-2 focus:ring-[var(--soft-blue)] text-sm lg:text-base transition-colors"
-                    />
-                    <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--gray)]" />
-                  </div>
+              <nav className="header-nav">
+                <div className="header-search">
+                  <input
+                    type="text"
+                    placeholder="Search trends..."
+                    className="w-full"
+                  />
+                  <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                </div>
+                
+                <div className="hidden md:flex items-center gap-4">
+                  <Link href="/" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                    <FaHome className="text-sm" />
+                    <span className="text-sm font-medium">Home</span>
+                  </Link>
+                  
                   {trends.length > 0 && (
                     <div className="relative group">
-                      <button className="text-sm lg:text-base hover:text-[var(--soft-blue)] transition whitespace-nowrap">
-                        Top Trends
+                      <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                        <FaNewspaper className="text-sm" />
+                        <span className="text-sm font-medium">Top Trends</span>
                       </button>
-                      <div className="absolute hidden group-hover:block bg-[var(--white)] text-[var(--navy-blue)] rounded-lg shadow-md mt-2 p-2 w-48 lg:w-64 right-0 lg:right-auto">
-                        {trends.slice(0, 5).map((trend) => (
-                          <Link
-                            key={trend.slug}
-                            href={`/trends/${trend.slug}`}
-                            className="block px-2 py-1 hover:bg-[var(--soft-blue)] hover:text-[var(--white)] rounded text-sm transition-colors"
-                          >
-                            {trend.title}
-                          </Link>
-                        ))}
+                      <div className="absolute hidden group-hover:block bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-lg mt-2 p-3 w-72 right-0 border border-gray-200 dark:border-gray-700">
+                        <div className="space-y-2">
+                          {trends.slice(0, 5).map((trend) => (
+                            <Link
+                              key={trend.slug}
+                              href={`/trends/${trend.slug}`}
+                              className="block px-3 py-2 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg text-sm transition-colors"
+                            >
+                              <div className="font-medium line-clamp-1">{trend.title}</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                {trend.category} • {trend.spike}
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -144,48 +156,51 @@ export default async function RootLayout({
 
         {/* Main Content */}
         <main className="flex-grow pt-20 lg:pt-24">
-          <div className="container mx-auto py-6 lg:py-8">
+          <div className="container">
             <ClientProvider>{children}</ClientProvider>
           </div>
         </main>
 
         {/* Footer */}
-        <footer className="bg-[var(--navy-blue)] text-[var(--white)] py-6 lg:py-8 text-center text-sm">
-          <div className="container mx-auto">
-            <div className="flex flex-col items-center gap-6">
-              <div className="flex items-center justify-center gap-4">
+        <footer className="footer mt-auto">
+          <div className="container">
+            <div className="footer-content">
+              <div className="flex items-center gap-3">
                 <Image
                   src="/logo.svg"
                   alt="NowSpike Logo"
                   width={24}
                   height={24}
-                  className="w-5 lg:w-6"
+                  className="w-6 h-6"
                 />
-                <p>© 2025 NowSpike. All rights reserved.</p>
+                <div>
+                  <p className="font-semibold">NowSpike</p>
+                  <p className="text-sm opacity-80">© 2025 All rights reserved</p>
+                </div>
               </div>
               
-              <div className="flex gap-6 justify-center">
-                <a href="https://twitter.com" className="hover:text-[var(--soft-blue)] p-2 transition-colors">
+              <div className="flex gap-6">
+                <a 
+                  href="https://twitter.com" 
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                  aria-label="Twitter"
+                >
                   <FaTwitter size={20} />
                 </a>
-                <a href="https://facebook.com" className="hover:text-[var(--soft-blue)] p-2 transition-colors">
+                <a 
+                  href="https://facebook.com" 
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                  aria-label="Facebook"
+                >
                   <FaFacebook size={20} />
                 </a>
               </div>
               
-              <div className="flex flex-wrap justify-center gap-6">
-                <a href="/about" className="hover:text-[var(--soft-blue)] transition px-4 py-2 whitespace-nowrap">
-                  About
-                </a>
-                <a href="/privacy" className="hover:text-[var(--soft-blue)] transition px-4 py-2 whitespace-nowrap">
-                  Privacy
-                </a>
-                <a href="/terms" className="hover:text-[var(--soft-blue)] transition px-4 py-2 whitespace-nowrap">
-                  Terms
-                </a>
-                <a href="/contact" className="hover:text-[var(--soft-blue)] transition px-4 py-2 whitespace-nowrap">
-                  Contact
-                </a>
+              <div className="footer-links">
+                <Link href="/about">About</Link>
+                <Link href="/privacy">Privacy Policy</Link>
+                <Link href="/terms">Terms of Service</Link>
+                <Link href="/contact">Contact</Link>
               </div>
             </div>
           </div>
