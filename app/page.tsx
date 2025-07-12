@@ -4,7 +4,7 @@ import TrendCard from "@/components/TrendCard";
 import TrendingNow from "@/components/TrendingNow";
 import Link from "next/link";
 import Image from "next/image";
-import { FaChartLine, FaFire, FaClock, FaGlobe, FaSearch, FaArrowRight, FaNewspaper } from "react-icons/fa";
+import { FaFire, FaClock, FaGlobe, FaSearch, FaArrowRight, FaNewspaper } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
