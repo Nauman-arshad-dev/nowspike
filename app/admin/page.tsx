@@ -584,3 +584,156 @@ export default function AdminPage() {
     </div>
   );
 }
+```
+
+```typescript
+"use client";
+import { useState, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import CardDetails from "./CardDetails";
+import CardContent from "./CardContent";
+import { Trend } from "@/types/trend";
+import { formatDistanceToNow } from "date-fns";
+import { FaPlus, FaEdit, FaEye, FaTrash, FaSignOutAlt, FaSearch, FaFilter, FaSave, FaTimes, FaChartLine, FaUsers, FaNewspaper, FaCalendar } from "react-icons/fa";
+
+interface FormTrend {
+  title?: string;
+  teaser?: string;
+  slug?: string;
+  spike?: string;
+  content?: ContentBlock[];
+  timestamp?: string;
+  category?: string;
+  isHero?: boolean;
+  relatedTopics?: string[];
+  relatedQueries?: string[];
+  image?: string | File;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface ContentBlock {
+  type: "paragraph" | "image" | "video" | "x-embed";
+  title?: string;
+  value: string;
+  image?: string;
+  caption?: string;
+}
+
+export default function AdminPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [trends, setTrends] = useState<Trend[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingTrend, setEditingTrend] = useState<Trend | null>(null);
+  const [formData, setFormData] = useState<FormTrend>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
+  const [stats, setStats] = useState({
+    totalTrends: 0,
+    heroTrends: 0,
+    todayTrends: 0,
+    totalViews: 0
+  });
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!session) {
+      router.push("/admin/login");
+      return;
+    }
+    fetchTrends();
+  }, [session, status, router]);
+
+  useEffect(() => {
+    calculateStats();
+  }, [trends]);
+
+  const calculateStats = () => {
+    const today = new Date().toDateString();
+    setStats({
+      totalTrends: trends.length,
+      heroTrends: trends.filter(t => t.isHero).length,
+      todayTrends: trends.filter(t => new Date(t.createdAt).toDateString() === today).length,
+      totalViews: trends.reduce((acc, trend) => acc + Math.floor(Math.random() * 1000), 0)
+    });
+  };
+
+  const filterTrends = () => {
+    return trends.filter(trend => {
+      const matchesSearch = trend.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           trend.teaser.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = filterCategory === "" || trend.category === filterCategory;
+      return matchesSearch && matchesCategory;
+    });
+  };
+
+  const fetchTrends = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+      const res = await fetch(`${baseUrl}/api/trends`);
+      if (res.ok) {
+        const data = await res.json();
+        setTrends(data.data || []);
+      }
+    } catch (error) {
+      console.error("Error fetching trends:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({});
+    setEditingTrend(null);
+  };
+
+  const handleEdit = (trend: Trend) => {
+    setEditingTrend(trend);
+    setFormData(trend);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this trend?")) return;
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+      const res = await fetch(`${baseUrl}/api/trends/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        fetchTrends();
+      }
+    } catch (error) {
+      console.error("Error deleting trend:", error);
+    }
+  };
+
+  const categories = [
+    "Entertainment", "Sports", "Technology", "Health", 
+    "Business", "Politics", "Science", "Gaming",
+    "Music", "Movies", "Fashion", "Food"
+  ];
+
+  if (status === "loading" || loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 overflow-x-hidden">
+      <div className="container mx-auto p-4 lg:p-6 max-w-7xl">
+        {/* Header */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
+          <div
