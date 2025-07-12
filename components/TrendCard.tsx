@@ -30,7 +30,7 @@ export default function TrendCard({ trend }: TrendCardProps) {
     <article className="card card-interactive group">
       {/* Image Section */}
       {trend.image && (
-        <div className="image-container h-48 mb-4 relative">
+        <div className="image-container h-56 mb-6 relative">
           <Image
             src={trend.image}
             alt={trend.title}
@@ -38,19 +38,19 @@ export default function TrendCard({ trend }: TrendCardProps) {
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           
           {/* Category Badge */}
-          <div className="absolute top-3 left-3">
-            <span className="inline-flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+          <div className="absolute top-4 left-4">
+            <span className="tag tag-category">
               <FaTag className="text-xs" />
               {trend.category}
             </span>
           </div>
           
           {/* Spike Badge */}
-          <div className="absolute top-3 right-3">
-            <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+          <div className="absolute top-4 right-4">
+            <span className="tag tag-spike">
               {trend.spike}
             </span>
           </div>
@@ -58,11 +58,15 @@ export default function TrendCard({ trend }: TrendCardProps) {
       )}
 
       {/* Content Section */}
-      <div className="space-y-4">
+      <div className="flex flex-col h-full">
         {/* Meta Information */}
         <div className="card-meta">
-          <FaClock className="text-sm" />
-          <span>{new Date(trend.timestamp).toLocaleDateString()}</span>
+          <FaClock className="text-sm opacity-80" />
+          <span>{new Date(trend.timestamp).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+          })}</span>
         </div>
 
         {/* Title */}
@@ -71,27 +75,27 @@ export default function TrendCard({ trend }: TrendCardProps) {
         </h3>
 
         {/* Description */}
-        <p className="card-content line-clamp-3">
+        <p className="card-content line-clamp-3 flex-grow">
           {trend.teaser}
         </p>
 
         {/* Actions */}
-        <div className="card-actions">
+        <div className="card-actions pt-4 border-t border-gray-100 dark:border-gray-700">
           <Link
             href={`/trends/${trend.slug}`}
-            className="btn btn-primary btn-sm"
+            className="btn btn-primary btn-sm flex-1 justify-center"
           >
-            <FaEye />
-            Read More
+            <FaEye className="text-sm" />
+            Read Full Story
           </Link>
 
           <button
             onClick={handleShare}
-            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-300"
+            className="p-3 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-xl transition-all duration-300 hover:scale-105"
             title="Share this trend"
             aria-label="Share trend"
           >
-            <FaShareAlt />
+            <FaShareAlt className="text-sm" />
           </button>
         </div>
       </div>

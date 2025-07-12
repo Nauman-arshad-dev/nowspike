@@ -98,13 +98,13 @@ export default async function RootLayout({
                 <Image
                   src="/logo.svg"
                   alt="NowSpike Logo"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10"
                 />
                 <div>
-                  <span className="text-xl font-bold">NowSpike</span>
-                  <p className="text-sm opacity-90 hidden sm:block">What&apos;s spiking now</p>
+                  <span className="text-2xl font-black tracking-tight">NowSpike</span>
+                  <p className="text-sm opacity-90 hidden sm:block font-medium">What&apos;s spiking now</p>
                 </div>
               </Link>
               
