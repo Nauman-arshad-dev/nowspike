@@ -1,4 +1,3 @@
-
 "use client";
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
@@ -108,25 +107,25 @@ export default function AdminPage() {
 
   const filterTrends = () => {
     let filtered = trends;
-    
+
     if (searchTerm) {
-      filtered = filtered.filter(trend => 
+      filtered = filtered.filter(trend =>
         trend.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         trend.category.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
+
     if (selectedCategory !== "all") {
       filtered = filtered.filter(trend => trend.category === selectedCategory);
     }
-    
+
     setFilteredTrends(filtered);
   };
 
   const calculateStats = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const todayTrends = trends.filter(trend => {
       const trendDate = new Date(trend.createdAt);
       trendDate.setHours(0, 0, 0, 0);
@@ -275,7 +274,7 @@ export default function AdminPage() {
       });
 
       if (!res.ok) throw new Error("Failed to delete trend");
-      
+
       await fetchTrends();
       alert("Trend deleted successfully!");
     } catch (error) {
@@ -345,7 +344,7 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -357,7 +356,7 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -369,7 +368,7 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -400,7 +399,7 @@ export default function AdminPage() {
                 <FaTimes className="text-xl" />
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <CardDetails form={form} setForm={setForm} editSlug={editSlug} />
               <CardContent
@@ -438,7 +437,7 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <button
                   type="submit"
@@ -476,7 +475,7 @@ export default function AdminPage() {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Articles Management
             </h2>
-            
+
             {/* Search and Filter */}
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
               <div className="relative">
@@ -551,7 +550,7 @@ export default function AdminPage() {
                         </span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => window.open(`/trends/${trend.slug}`, '_blank')}

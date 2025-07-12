@@ -26,7 +26,7 @@ export default function AboutPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">What We Do</h2>
           <p className="mb-4">
-            NowSpike is your premier destination for discovering what's trending right now. We deliver real-time insights into the most talked-about topics across the United States, sourced directly from Google Trends data.
+            NowSpike is your premier destination for discovering what&apos;s trending right now. We deliver real-time insights into the most talked-about topics across the United States, sourced directly from Google Trends data.
           </p>
         </section>
 
@@ -55,7 +55,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-semibold mb-4">Why Choose NowSpike?</h2>
           <ul className="list-disc ml-6 mb-4">
             <li><strong>Real-time Updates:</strong> Our content is refreshed daily with the latest trending topics</li>
-            <li><strong>Data-Driven:</strong> All trends are sourced from Google's comprehensive search data</li>
+            <li><strong>Data-Driven:</strong> All trends are sourced from Google&apos;s comprehensive search data</li>
             <li><strong>Comprehensive Coverage:</strong> From entertainment to technology, we cover what matters to you</li>
             <li><strong>Easy to Navigate:</strong> Clean, intuitive design that gets you to the news fast</li>
             <li><strong>Mobile Optimized:</strong> Perfect reading experience on any device</li>
@@ -65,14 +65,14 @@ export default function AboutPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
           <p className="mb-4">
-            In today's fast-paced digital world, staying informed about trending topics can be overwhelming. NowSpike simplifies this by curating the most relevant, trending content and presenting it in an easily digestible format. Whether you're a content creator, marketer, journalist, or simply someone who wants to stay current, NowSpike is your trusted source for what's happening now.
+            In today&apos;s fast-paced digital world, staying informed about trending topics can be overwhelming. NowSpike simplifies this by curating the most relevant, trending content and presenting it in an easily digestible format. Whether you&apos;re a content creator, marketer, journalist, or simply someone who wants to stay current, NowSpike is your trusted source for what&apos;s happening now.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Stay Connected</h2>
           <p className="mb-4">
-            Have questions, suggestions, or feedback? We'd love to hear from you. Reach out to us at <a href="mailto:contact@nowspike.com" className="text-blue-600 hover:underline">contact@nowspike.com</a> and join thousands of users who rely on NowSpike for their daily dose of trending news.
+            Have questions, suggestions, or feedback? We&apos;d love to hear from you. Reach out to us at <a href="mailto:contact@nowspike.com" className="text-blue-600 hover:underline">contact@nowspike.com</a> and join thousands of users who rely on NowSpike for their daily dose of trending news.
           </p>
         </section>
       </div>
