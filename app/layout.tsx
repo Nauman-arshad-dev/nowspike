@@ -8,6 +8,7 @@ import { FaSearch, FaTwitter, FaFacebook } from "react-icons/fa";
 import Image from "next/image";
 import { Trend } from "@/types/trend";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
+import StructuredData from "@/components/StructuredData";
 
 interface TrendsResponse {
   data: Trend[];
@@ -166,6 +167,9 @@ export default async function RootLayout({
               </a>
               <a href="/privacy" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-sm sm:px-4 sm:py-2 whitespace-nowrap">
                 Privacy
+              </a>
+              <a href="/terms" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-sm sm:px-4 sm:py-2 whitespace-nowrap">
+                Terms
               </a>
               <a href="/contact" className="hover:text-[var(--soft-blue)] transition px-2 py-1 text-xs sm:text-sm sm:px-4 sm:py-2 whitespace-nowrap">
                 Contact

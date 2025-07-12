@@ -55,6 +55,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.5,
     },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    },
   ];
 
   const trendPages: MetadataRoute.Sitemap = trends.map((trend) => {

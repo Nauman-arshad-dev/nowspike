@@ -6,6 +6,7 @@ import { Trend } from "@/types/trend";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import TrendingNow from "@/components/TrendingNow";
+import StructuredData from "@/components/StructuredData";
 
 async function getTrends(): Promise<Trend[]> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
