@@ -8,6 +8,7 @@ import { FaChartLine, FaFire, FaClock, FaGlobe, FaSearch, FaArrowRight, FaNewspa
 import { formatDistanceToNow } from "date-fns";
 import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
+import { FaArrowTrendUp } from "react-icons/fa6";
 
 interface TrendsResponse {
   data: Trend[];
@@ -298,7 +299,7 @@ export default async function HomePage() {
           <section className="mt-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-8 shadow-xl">
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div>
-                <FaChartLine className="text-4xl mx-auto mb-3 text-blue-200" />
+                <FaArrowTrendUp className="text-4xl mx-auto mb-3 text-blue-200" />
                 <div className="text-3xl font-bold">{trends.length}</div>
                 <div className="text-blue-200">Active Trends</div>
               </div>
