@@ -18,7 +18,7 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
           <p className="mb-4">
-            By accessing and using NowSpike ("the Service"), you accept and agree to be bound by the terms and provision of this agreement.
+            By accessing and using NowSpike (&apos;the Service&apos;), you accept and agree to be bound by the terms and provision of this agreement.
           </p>
         </section>
 
@@ -46,7 +46,7 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">5. Disclaimer</h2>
           <p className="mb-4">
-            The information on NowSpike is provided on an "as is" basis. We make no representations or warranties of any kind, express or implied.
+            The information on NowSpike is provided on an &apos;as is&apos; basis. We make no representations or warranties of any kind, express or implied.
           </p>
         </section>
 

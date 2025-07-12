@@ -3,7 +3,7 @@ import { Trend } from "@/types/trend";
 import Link from "next/link";
 import TrendImage from "./TrendImage";
 import { formatDistanceToNow } from "date-fns";
-import { FaArrowUp, FaClock, FaBookmark, FaShareAlt } from "react-icons/fa";
+import { FaArrowUp, FaClock, FaBookmark, FaShareAlt, FaEye } from "react-icons/fa";
 import { useState } from "react";
 
 declare global {

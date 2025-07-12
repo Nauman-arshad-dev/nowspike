@@ -348,7 +348,7 @@ export default function AdminPage() {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Today's Articles</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Today&apos;s Articles</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.todayTrends}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">

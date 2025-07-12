@@ -4,7 +4,7 @@ import TrendCard from "@/components/TrendCard";
 import TrendingNow from "@/components/TrendingNow";
 import Link from "next/link";
 import Image from "next/image";
-import { FaTrendingUp, FaFire, FaClock, FaGlobe, FaSearch, FaArrowRight, FaNewspaper, FaChartLine } from "react-icons/fa";
+import { FaChartLine, FaFire, FaClock, FaGlobe, FaSearch, FaArrowRight, FaNewspaper } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
@@ -259,7 +259,7 @@ export default async function HomePage() {
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <FaTrendingUp className="text-white text-sm" />
+                  <FaArrowTrendUp className="text-white text-sm" />
                 </div>
                 Featured Stories
               </h2>

@@ -60,7 +60,7 @@ export default function PrivacyPage() {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">5. Your Rights (GDPR)</h2>
-          <p className="mb-4">If you're in the EU, you have the right to:</p>
+          <p className="mb-4">If you&apos;re in the EU, you have the right to:</p>
           <ul className="list-disc ml-6 mb-4">
             <li>Access your personal data</li>
             <li>Correct inaccurate data</li>
