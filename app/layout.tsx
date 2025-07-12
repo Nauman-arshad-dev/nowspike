@@ -8,7 +8,7 @@ import { FaSearch, FaTwitter, FaFacebook } from "react-icons/fa";
 import Image from "next/image";
 import { Trend } from "@/types/trend";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
-import StructuredData from "@/components/StructuredData";
+
 
 interface TrendsResponse {
   data: Trend[];

@@ -1,4 +1,3 @@
-
 // app/terms/page.tsx
 import type { Metadata } from "next";
 
@@ -14,7 +13,7 @@ export default function TermsPage() {
   return (
     <div className="max-w-6xl mx-auto py-8 sm:py-12 px-2 sm:px-6">
       <h1 className="text-3xl sm:text-5xl font-bold text-[var(--navy-blue)] mb-8">Terms of Service</h1>
-      
+
       <div className="prose prose-lg max-w-none text-[var(--foreground)]">
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>

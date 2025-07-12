@@ -1,11 +1,17 @@
-
 "use client";
 import { Trend } from "@/types/trend";
 import Link from "next/link";
 import TrendImage from "./TrendImage";
 import { formatDistanceToNow } from "date-fns";
-import { FaArrowUp, FaClock, FaEye, FaShareAlt, FaBookmark } from "react-icons/fa";
+import { FaArrowUp, FaClock, FaBookmark, FaShareAlt } from "react-icons/fa";
 import { useState } from "react";
+
+declare global {
+  interface Window {
+    trackTrendView?: (title: string, category: string, spike: number) => void;
+    trackTrendShare?: (title: string, platform: string) => void;
+  }
+}
 
 interface TrendCardProps {
   trend: Trend;
@@ -40,7 +46,7 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
 
   const getCardClasses = () => {
     const baseClasses = "group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden border border-gray-100 dark:border-gray-700";
-    
+
     switch (variant) {
       case "featured":
         return `${baseClasses} lg:col-span-2`;
@@ -63,7 +69,15 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
   };
 
   return (
-    <Link href={`/trends/${trend.slug}`} className="block">
+    <Link 
+          href={`/trends/${trend.slug}`} 
+          className="group block"
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.trackTrendView) {
+              window.trackTrendView(trend.title, trend.category, trend.spike);
+            }
+          }}
+        >
       <article 
         className={getCardClasses()}
         onMouseEnter={() => setIsHovered(true)}
@@ -76,17 +90,17 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
             alt={trend.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
-          
+
           {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
+
           {/* Category Badge */}
           <div className="absolute top-3 left-3">
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
               {trend.category}
             </span>
           </div>
-          
+
           {/* Spike Indicator */}
           <div className="absolute top-3 right-3">
             <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
@@ -94,7 +108,7 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
               {trend.spike}
             </div>
           </div>
-          
+
           {/* Action Buttons (Visible on Hover) */}
           <div className={`absolute bottom-3 right-3 flex gap-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
             <button
@@ -126,14 +140,14 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
           }`}>
             {trend.title}
           </h3>
-          
+
           {/* Teaser */}
           {variant !== "compact" && (
             <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4 leading-relaxed">
               {trend.teaser}
             </p>
           )}
-          
+
           {/* Meta Information */}
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
             <div className="flex items-center gap-3">
@@ -148,7 +162,7 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
                 </div>
               )}
             </div>
-            
+
             {/* Read Time Estimate */}
             {variant !== "compact" && (
               <span className="text-gray-400">
@@ -156,7 +170,7 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
               </span>
             )}
           </div>
-          
+
           {/* Related Topics (Featured variant only) */}
           {variant === "featured" && trend.relatedTopics && trend.relatedTopics.length > 0 && (
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -178,7 +192,7 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
             </div>
           )}
         </div>
-        
+
         {/* Hover Effect Indicator */}
         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-indigo-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
       </article>

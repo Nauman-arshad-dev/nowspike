@@ -5,7 +5,7 @@
 import Script from "next/script";
 
 export default function AnalyticsScripts() {
-  const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || "G-XXXXXXXXXX"; // Update with your new GA4 ID
+  const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 
   return (
     <>
@@ -38,7 +38,7 @@ export default function AnalyticsScripts() {
       </Script>
 
       {/* Google Search Console verification */}
-      <meta name="google-site-verification" content="YOUR_SEARCH_CONSOLE_CODE" />
+      <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || ""} />
       
       {/* Additional tracking for trending content */}
       <Script id="trend-tracking" strategy="afterInteractive">

@@ -1,6 +1,5 @@
-
 // E:\nauman\NowSpike\frontend\app\page.tsx
-import { Trend, TrendData } from "@/types/trend";
+import { Trend } from "@/types/trend";
 import TrendCard from "@/components/TrendCard";
 import TrendingNow from "@/components/TrendingNow";
 import Link from "next/link";
@@ -100,7 +99,7 @@ export default async function HomePage() {
   const hero = trends.find((trend) => trend.isHero) || trends[0];
   const featuredTrends = trends.filter((trend) => !trend.isHero).slice(0, 8);
   const categories = ["sports", "entertainment", "technology", "politics", "health", "business"];
-  
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "NewsMediaOrganization",
@@ -137,7 +136,7 @@ export default async function HomePage() {
   return (
     <>
       <StructuredData data={structuredData} />
-      
+
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         {/* Breaking News Ticker */}
         <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-2 shadow-lg">
@@ -178,15 +177,15 @@ export default async function HomePage() {
                       {hero.spike}
                     </span>
                   </div>
-                  
+
                   <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
                     {hero.title}
                   </h1>
-                  
+
                   <p className="text-xl text-blue-100 leading-relaxed">
                     {hero.teaser}
                   </p>
-                  
+
                   <div className="flex flex-wrap items-center gap-4 text-sm text-blue-200">
                     <div className="flex items-center gap-2">
                       <FaClock className="text-blue-300" />
@@ -197,7 +196,7 @@ export default async function HomePage() {
                       {hero.category.toUpperCase()}
                     </div>
                   </div>
-                  
+
                   <Link
                     href={`/trends/${hero.slug}`}
                     className="inline-flex items-center gap-3 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
@@ -206,7 +205,7 @@ export default async function HomePage() {
                     <FaArrowRight className="text-sm" />
                   </Link>
                 </div>
-                
+
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-2xl blur-3xl"></div>
                   <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-1">
@@ -222,7 +221,7 @@ export default async function HomePage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Animated background elements */}
             <div className="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full animate-bounce"></div>
             <div className="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/10 rounded-full animate-pulse"></div>
@@ -272,7 +271,7 @@ export default async function HomePage() {
                 <FaArrowRight className="text-sm" />
               </Link>
             </div>
-            
+
             {featuredTrends.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {featuredTrends.map((trend) => (
@@ -323,8 +322,8 @@ export default async function HomePage() {
                 Stay Ahead of the Trends
               </h3>
               <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-                Get real-time updates on what's trending across sports, entertainment, technology, and more. 
-                Be the first to know what's spiking globally.
+                Get real-time updates on what&apos;s trending across sports, entertainment, technology, and more. 
+                Be the first to know what&apos;s spiking globally.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link

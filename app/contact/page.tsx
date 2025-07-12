@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaTwitter, FaLinkedin, FaClock, FaPaperPlane } from "react-icons/fa";
 
@@ -24,7 +23,7 @@ export default function ContactPage() {
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Have a trending story tip? Questions about our platform? Partnership opportunities? 
-            We'd love to hear from you and help you stay ahead of the trends.
+            We&apos;d love to hear from you and help you stay ahead of the trends.
           </p>
         </div>
 
@@ -35,7 +34,7 @@ export default function ContactPage() {
               <FaPaperPlane className="text-blue-600" />
               Send us a Message
             </h2>
-            
+
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
@@ -65,7 +64,7 @@ export default function ContactPage() {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Email Address *
@@ -79,7 +78,7 @@ export default function ContactPage() {
                   placeholder="john@example.com"
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Subject *
@@ -99,7 +98,7 @@ export default function ContactPage() {
                   <option value="other">Other</option>
                 </select>
               </div>
-              
+
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Message *
@@ -113,7 +112,7 @@ export default function ContactPage() {
                   placeholder="Tell us more about your inquiry..."
                 ></textarea>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -125,7 +124,7 @@ export default function ContactPage() {
                   Subscribe to our newsletter for trending updates
                 </label>
               </div>
-              
+
               <button
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
@@ -142,7 +141,7 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Contact Information
               </h2>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -154,7 +153,7 @@ export default function ContactPage() {
                     <p className="text-sm text-gray-500 dark:text-gray-400">We respond within 24 hours</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center flex-shrink-0">
                     <FaPhone className="text-green-600 dark:text-green-400" />
@@ -165,7 +164,7 @@ export default function ContactPage() {
                     <p className="text-sm text-gray-500 dark:text-gray-400">Mon-Fri, 9 AM - 6 PM EST</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center flex-shrink-0">
                     <FaMapMarkerAlt className="text-purple-600 dark:text-purple-400" />
@@ -179,7 +178,7 @@ export default function ContactPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center flex-shrink-0">
                     <FaClock className="text-orange-600 dark:text-orange-400" />
@@ -201,7 +200,7 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Follow Us
               </h2>
-              
+
               <div className="flex gap-4">
                 <a
                   href="https://twitter.com/nowspike"
@@ -218,7 +217,7 @@ export default function ContactPage() {
                   <FaLinkedin />
                 </a>
               </div>
-              
+
               <p className="text-sm text-gray-600 dark:text-gray-300 mt-4">
                 Stay connected for the latest trending news and platform updates.
               </p>
