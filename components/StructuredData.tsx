@@ -1,15 +1,43 @@
-
 // components/StructuredData.tsx
 import { Trend } from "@/types/trend";
 
 interface StructuredDataProps {
   trend?: Trend;
   isHomePage?: boolean;
+  data?: {
+    "@context": string;
+    "@type": string;
+    name: string;
+    url: string;
+    logo: string;
+    description: string;
+    sameAs: string[];
+    mainEntity: {
+      "@type": string;
+      headline: string;
+      description: string;
+      url: string;
+      datePublished: string;
+      dateModified: string;
+      author: {
+        "@type": string;
+        name: string;
+      };
+      publisher: {
+        "@type": string;
+        name: string;
+        logo: {
+          "@type": string;
+          url: string;
+        };
+      };
+    }[];
+  };
 }
 
-export default function StructuredData({ trend, isHomePage }: StructuredDataProps) {
+export default function StructuredData({ trend, isHomePage, data }: StructuredDataProps) {
   const baseUrl = "https://www.nowspike.com";
-  
+
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -44,93 +72,105 @@ export default function StructuredData({ trend, isHomePage }: StructuredDataProp
     }
   };
 
-  const articleSchema = trend ? {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": trend.title,
-    "description": trend.teaser,
-    "image": trend.image ? `${baseUrl}${trend.image}` : `${baseUrl}/images/placeholder.jpg`,
-    "author": {
-      "@type": "Organization",
-      "name": "NowSpike"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "NowSpike",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${baseUrl}/logo.svg`
+  const articleSchema = trend
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": trend.title,
+        "description": trend.teaser,
+        "image": trend.image ? `${baseUrl}${trend.image}` : `${baseUrl}/images/placeholder.jpg`,
+        "author": {
+          "@type": "Organization",
+          "name": "NowSpike"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "NowSpike",
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${baseUrl}/logo.svg`
+          }
+        },
+        "datePublished": trend.createdAt,
+        "dateModified": trend.updatedAt,
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `${baseUrl}/trends/${trend.slug}`
+        },
+        "articleSection": trend.category,
+        "keywords": trend.relatedTopics?.join(", ") || ""
       }
-    },
-    "datePublished": trend.createdAt,
-    "dateModified": trend.updatedAt,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `${baseUrl}/trends/${trend.slug}`
-    },
-    "articleSection": trend.category,
-    "keywords": trend.relatedTopics?.join(", ") || ""
-  } : null;
+    : null;
 
-  const breadcrumbSchema = trend ? {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": baseUrl
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Trends",
-        "item": `${baseUrl}/trends`
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": trend.title,
-        "item": `${baseUrl}/trends/${trend.slug}`
+  const breadcrumbSchema = trend
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": baseUrl
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Trends",
+            "item": `${baseUrl}/trends`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": trend.title,
+            "item": `${baseUrl}/trends/${trend.slug}`
+          }
+        ]
       }
-    ]
-  } : null;
+    : null;
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(organizationSchema),
-        }}
-      />
-      
-      {isHomePage && (
+      {data ? (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
+            __html: JSON.stringify(data)
           }}
         />
-      )}
-      
-      {articleSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(articleSchema),
-          }}
-        />
-      )}
-      
-      {breadcrumbSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(breadcrumbSchema),
-          }}
-        />
+      ) : (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationSchema)
+            }}
+          />
+          {isHomePage && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(websiteSchema)
+              }}
+            />
+          )}
+          {articleSchema && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(articleSchema)
+              }}
+            />
+          )}
+          {breadcrumbSchema && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(breadcrumbSchema)
+              }}
+            />
+          )}
+        </>
       )}
     </>
   );

@@ -69,16 +69,17 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
   };
 
   return (
-    <Link 
-          href={`/trends/${trend.slug}`} 
-          className="group block"
-          onClick={() => {
-            if (typeof window !== 'undefined' && window.trackTrendView) {
-              window.trackTrendView(trend.title, trend.category, trend.spike);
-            }
-          }}
-        >
-      <article 
+    <Link
+      href={`/trends/${trend.slug}`}
+      className="group block"
+      onClick={() => {
+        if (typeof window !== "undefined" && window.trackTrendView) {
+          const spikeNumber = parseFloat(trend.spike) || 0; // Convert string to number
+          window.trackTrendView(trend.title, trend.category, spikeNumber);
+        }
+      }}
+    >
+      <article
         className={getCardClasses()}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -88,6 +89,8 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
           <TrendImage
             src={trend.image || "/images/placeholder.jpg"}
             alt={trend.title}
+            width={variant === "compact" ? 96 : 600}
+            height={variant === "compact" ? 96 : variant === "featured" ? 320 : 192}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
 
@@ -110,13 +113,17 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
           </div>
 
           {/* Action Buttons (Visible on Hover) */}
-          <div className={`absolute bottom-3 right-3 flex gap-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+          <div
+            className={`absolute bottom-3 right-3 flex gap-2 transition-all duration-300 ${
+              isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+            }`}
+          >
             <button
               onClick={handleBookmark}
               className={`p-2 rounded-full backdrop-blur-sm transition-colors ${
-                isBookmarked 
-                  ? 'bg-yellow-500 text-white' 
-                  : 'bg-white/20 text-white hover:bg-white/30'
+                isBookmarked
+                  ? "bg-yellow-500 text-white"
+                  : "bg-white/20 text-white hover:bg-white/30"
               }`}
               title={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
             >
@@ -135,9 +142,15 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
         {/* Content */}
         <div className={`p-6 ${variant === "compact" ? "flex-1" : ""}`}>
           {/* Title */}
-          <h3 className={`font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mb-3 ${
-            variant === "featured" ? "text-2xl" : variant === "compact" ? "text-base" : "text-lg"
-          }`}>
+          <h3
+            className={`font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mb-3 ${
+              variant === "featured"
+                ? "text-2xl"
+                : variant === "compact"
+                ? "text-base"
+                : "text-lg"
+            }`}
+          >
             {trend.title}
           </h3>
 
@@ -166,7 +179,10 @@ export default function TrendCard({ trend, variant = "default" }: TrendCardProps
             {/* Read Time Estimate */}
             {variant !== "compact" && (
               <span className="text-gray-400">
-                {Math.ceil(trend.content.reduce((acc, block) => acc + block.value.split(' ').length, 0) / 200)} min read
+                {Math.ceil(
+                  trend.content.reduce((acc, block) => acc + block.value.split(" ").length, 0) / 200
+                )}{" "}
+                min read
               </span>
             )}
           </div>

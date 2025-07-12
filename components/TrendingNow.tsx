@@ -1,4 +1,4 @@
-// E:\nauman\NowSpike\frontend\components\TrendingNow.tsx
+// components/TrendingNow.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,20 +6,20 @@ import TrendCard from "./TrendCard";
 import { Trend } from "@/types/trend";
 
 interface TrendingNowProps {
-  initialTrends: Trend[];
+  trends: Trend[];
 }
 
-export default function TrendingNow({ initialTrends }: TrendingNowProps) {
-  const [trends, setTrends] = useState<Trend[]>(initialTrends);
+export default function TrendingNow({ trends }: TrendingNowProps) {
+  const [trendsState, setTrends] = useState<Trend[]>(trends);
   const [displayCount, setDisplayCount] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(initialTrends.length > 10);
+  const [hasMore, setHasMore] = useState(trends.length > 10);
 
   useEffect(() => {
-    setTrends(initialTrends);
+    setTrends(trends);
     setDisplayCount(10);
-    setHasMore(initialTrends.length > 10);
-  }, [initialTrends]);
+    setHasMore(trends.length > 10);
+  }, [trends]);
 
   const loadMore = () => {
     setIsLoading(true);
@@ -32,11 +32,11 @@ export default function TrendingNow({ initialTrends }: TrendingNowProps) {
   };
 
   useEffect(() => {
-    console.log("initialTrends.length:", initialTrends.length);
     console.log("trends.length:", trends.length);
+    console.log("trendsState.length:", trendsState.length);
     console.log("displayCount:", displayCount);
     console.log("hasMore:", hasMore);
-  }, [initialTrends, trends, displayCount, hasMore]);
+  }, [trends, trendsState, displayCount, hasMore]);
 
   return (
     <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12">
@@ -47,8 +47,8 @@ export default function TrendingNow({ initialTrends }: TrendingNowProps) {
         </span>
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-        {trends.slice(0, displayCount).map((trend) => (
-          <TrendCard key={trend.slug} {...trend} />
+        {trendsState.slice(0, displayCount).map((trend) => (
+          <TrendCard key={trend.slug} trend={trend} />
         ))}
       </div>
       {trends.length > 0 && hasMore && (
