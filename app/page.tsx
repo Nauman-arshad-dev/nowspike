@@ -1,365 +1,347 @@
+
 // E:\nauman\NowSpike\frontend\app\page.tsx
-import type { Metadata } from "next";
+import { Trend, TrendData } from "@/types/trend";
 import TrendCard from "@/components/TrendCard";
-import TrendImage from "@/components/TrendImage";
-import { Trend } from "@/types/trend";
-import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
 import TrendingNow from "@/components/TrendingNow";
+import Link from "next/link";
+import Image from "next/image";
+import { FaTrendingUp, FaFire, FaClock, FaGlobe, FaSearch, FaArrowRight, FaNewspaper, FaChartLine } from "react-icons/fa";
+import { formatDistanceToNow } from "date-fns";
+import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
 
-async function getTrends(): Promise<Trend[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  if (!baseUrl) {
-    throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables");
+interface TrendsResponse {
+  data: Trend[];
+}
+
+async function fetchTrends(): Promise<Trend[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseUrl) {
+      throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
+    }
+    const res = await fetch(`${baseUrl}/api/trends`, { next: { revalidate: 60 } });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch trends: ${res.status} ${res.statusText}`);
+    }
+    const trendsData: TrendsResponse = await res.json();
+    return trendsData.data || [];
+  } catch (error) {
+    console.error("Error fetching trends:", error);
+    return [];
   }
-  const res = await fetch(`${baseUrl}/api/trends`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch trends");
-  const { data } = await res.json();
-  return data || [];
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const trends = await getTrends();
-  const hero = trends.find((trend) => trend.isHero) || trends[0];
+  const trends = await fetchTrends();
+  const topTrends = trends.slice(0, 5).map((t: Trend) => t.title).join(", ");
+  const heroTrend = trends.find(t => t.isHero);
 
   return {
-    title: hero ? `${hero.title}` : "NowSpike - Trending News & Daily Updates from Google",
-    description: hero
-      ? hero.teaser
-      : "Explore the latest trending topics updated daily on NowSpike—your go-to source for Arts, Tech, Health, Sports, Autos, Beauty, and more from Google.",
+    metadataBase: new URL("https://www.nowspike.com"),
+    title: "NowSpike - Today's Trending Topics & Breaking News",
+    description: `Discover what's trending now: ${topTrends}. Real-time trending news, viral stories, and breaking updates from around the world. Updated hourly from Google Trends.`,
+    keywords: `trending news, viral stories, breaking news, google trends, ${topTrends}, real-time updates, trending topics, news analysis`,
+    authors: [{ name: "NowSpike Editorial Team" }],
+    creator: "NowSpike",
+    publisher: "NowSpike",
     alternates: {
       canonical: "https://www.nowspike.com",
     },
-    keywords: [
-      "trending news",
-      "daily updates",
-      "Google",
-      "Arts & Entertainment",
-      "Autos & Vehicles",
-      "Beauty & Fitness",
-      "Books & Literature",
-      "Business & Industrial",
-      "Computers & Electronics",
-      "Finance",
-      "Food & Drink",
-      "Games",
-      "Health",
-      "Hobbies & Leisure",
-      "Home & Garden",
-      "Internet & Telecom",
-      "Jobs & Education",
-      "Law & Government",
-      "News",
-      "Online Communities",
-      "People & Society",
-      "Pets & Animals",
-      "Real Estate",
-      "Science",
-      "Shopping",
-      "Sports",
-      "Travel",
-    ].join(", "),
     openGraph: {
-      title: hero ? `${hero.title} | NowSpike Trending News` : "NowSpike - Trending News & Daily Updates",
-      description: hero
-        ? hero.teaser
-        : "Stay ahead with daily trending topics from Google on NowSpike—Arts, Tech, Health, and more!",
+      title: "NowSpike - Today's Trending Topics & Breaking News",
+      description: `Stay ahead of the curve with trending stories: ${topTrends}. Real-time updates from Google Trends.`,
       url: "https://www.nowspike.com",
-      type: "website",
-      images: [
+      siteName: "NowSpike",
+      images: heroTrend?.image ? [
         {
-          url: hero?.image || "/images/default-og-image.jpg",
+          url: heroTrend.image,
           width: 1200,
           height: 630,
-          alt: hero?.title || "NowSpike Trending News",
-        },
+          alt: heroTrend.title,
+        }
+      ] : [
+        {
+          url: "/logo.svg",
+          width: 1200,
+          height: 630,
+          alt: "NowSpike - Trending News",
+        }
       ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "NowSpike - Today's Trending Topics",
+      description: `Real-time trending news: ${topTrends}`,
+      images: heroTrend?.image ? [heroTrend.image] : ["/logo.svg"],
+      creator: "@nowspike",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    verification: {
+      google: "a7b2c3d4e5f6g7h8",
     },
   };
 }
 
-export default async function Home() {
-  const trends = await getTrends();
+export default async function HomePage() {
+  const trends = await fetchTrends();
   const hero = trends.find((trend) => trend.isHero) || trends[0];
-  const nonHeroTrends = trends.filter((trend) => trend !== hero);
-
-  const categories = nonHeroTrends.reduce((acc, trend) => {
-    acc[trend.category] = acc[trend.category] || [];
-    acc[trend.category].push(trend);
-    return acc;
-  }, {} as Record<string, Trend[]>);
-
-  const uniqueCategories = Object.keys(categories).sort();
-  const tickerTrends = nonHeroTrends.slice(0, 5).map((t) => `${t.title} - ${t.spike}`);
-
-  const schemaData = {
+  const featuredTrends = trends.filter((trend) => !trend.isHero).slice(0, 8);
+  const categories = ["sports", "entertainment", "technology", "politics", "health", "business"];
+  
+  const structuredData = {
     "@context": "https://schema.org",
     "@type": "NewsMediaOrganization",
-    name: "NowSpike",
-    url: "https://www.nowspike.com",
-    description: "NowSpike delivers daily trending news across 24 categories sourced from Google.",
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": "https://www.nowspike.com",
-    },
-    article: [
-      {
-        "@type": "NewsArticle",
-        headline: hero.title,
-        image: [hero.image || "https://www.nowspike.com/images/default-og-image.jpg"],
-        datePublished: hero.timestamp,
-        dateModified: hero.updatedAt,
-        author: {
-          "@type": "Organization",
-          name: "NowSpike",
-        },
-        publisher: {
-          "@type": "Organization",
-          name: "NowSpike",
-          logo: {
-            "@type": "ImageObject",
-            url: "https://www.nowspike.com/logo.svg",
-          },
-        },
-        description: hero.teaser,
-        url: `https://www.nowspike.com/trends/${hero.slug}`,
-      },
-      ...nonHeroTrends.slice(0, 4).map((trend) => ({
-        "@type": "NewsArticle",
-        headline: trend.title,
-        image: [trend.image || "https://www.nowspike.com/images/default-og-image.jpg"],
-        datePublished: trend.timestamp,
-        dateModified: trend.updatedAt,
-        author: {
-          "@type": "Organization",
-          name: "NowSpike",
-        },
-        publisher: {
-          "@type": "Organization",
-          name: "NowSpike",
-          logo: {
-            "@type": "ImageObject",
-            url: "https://www.nowspike.com/logo.svg",
-          },
-        },
-        description: trend.teaser,
-        url: `https://www.nowspike.com/trends/${trend.slug}`,
-      })),
+    "name": "NowSpike",
+    "url": "https://www.nowspike.com",
+    "logo": "https://www.nowspike.com/logo.svg",
+    "description": "Real-time trending news and viral stories updated from Google Trends",
+    "sameAs": [
+      "https://twitter.com/nowspike",
+      "https://facebook.com/nowspike"
     ],
+    "mainEntity": trends.slice(0, 5).map(trend => ({
+      "@type": "NewsArticle",
+      "headline": trend.title,
+      "description": trend.teaser,
+      "url": `https://www.nowspike.com/trends/${trend.slug}`,
+      "datePublished": trend.createdAt,
+      "dateModified": trend.updatedAt,
+      "author": {
+        "@type": "Organization",
+        "name": "NowSpike Editorial Team"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "NowSpike",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.nowspike.com/logo.svg"
+        }
+      }
+    }))
   };
 
   return (
-    <div className="min-h-screen text-[var(--foreground)] bg-[var(--background)]">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-      />
-      <div className="bg-gradient-to-r from-[var(--navy-blue)] to-[#1A3A6D] text-[var(--white)] py-2 sm:py-3 shadow-lg">
-        <div className="max-w-7xl mx-auto flex items-center px-2 sm:px-4">
-          <span className="bg-[var(--breaking-red)] text-[var(--white)] font-bold text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full shrink-0">
-            BREAKING
-          </span>
-          <div className="flex-1 overflow-hidden ml-2 sm:ml-3">
-            <div className="animate-marquee whitespace-nowrap flex items-center gap-3 sm:gap-6">
-              {tickerTrends.map((item, idx) => (
-                <span
-                  key={idx}
-                  className="text-xs sm:text-sm font-medium text-[var(--white)] hover:text-[var(--soft-blue)] transition-colors duration-300"
-                >
-                  {item}
-                </span>
-              ))}
+    <>
+      <StructuredData data={structuredData} />
+      
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        {/* Breaking News Ticker */}
+        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-2 shadow-lg">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm font-bold whitespace-nowrap">
+                <FaFire className="text-yellow-300 animate-pulse" />
+                TRENDING NOW
+              </div>
+              <div className="overflow-hidden flex-1">
+                <div className="animate-marquee whitespace-nowrap text-sm">
+                  {trends.slice(0, 5).map((trend, index) => (
+                    <span key={trend.slug} className="mr-8">
+                      <Link href={`/trends/${trend.slug}`} className="hover:text-yellow-200 transition-colors">
+                        {trend.title} ({trend.spike})
+                      </Link>
+                      {index < 4 && " • "}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {hero && (
-        <section className="relative bg-[var(--navy-blue)] text-[var(--white)] py-6 sm:py-8 lg:py-12 px-2 sm:px-4 lg:px-6">
-          <div className="max-w-7xl mx-auto relative z-10">
-            <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-6 lg:gap-8">
-              <div className="w-full lg:w-1/2">
-                <TrendImage
-                  src={hero.image || "/images/placeholder.jpg"}
-                  alt={hero.title}
-                  width={1200}
-                  height={600}
-                  priority
-                  className="w-full h-56 sm:h-72 lg:h-96 object-cover rounded-xl shadow-2xl"
-                />
-              </div>
-              <div className="w-full lg:w-1/2 text-center lg:text-left">
-                <span className="inline-block bg-[var(--soft-blue)] text-[var(--white)] text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full mb-2 sm:mb-3 lg:mb-4">
-                  {hero.spike}
-                </span>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-[--font-poppins] mb-2 sm:mb-3 lg:mb-4 leading-tight">
-                  {hero.title}
-                </h1>
-                <p className="text-sm sm:text-base lg:text-lg opacity-90 max-w-xl mx-auto lg:mx-0 line-clamp-3">
-                  {hero.teaser}
-                </p>
-                <div className="mt-3 sm:mt-4 lg:mt-6 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4">
+        {/* Hero Section */}
+        {hero && (
+          <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white py-16 px-4 overflow-hidden">
+            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="relative max-w-6xl mx-auto">
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold animate-pulse">
+                      🔥 TRENDING
+                    </span>
+                    <span className="bg-white/10 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {hero.spike}
+                    </span>
+                  </div>
+                  
+                  <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
+                    {hero.title}
+                  </h1>
+                  
+                  <p className="text-xl text-blue-100 leading-relaxed">
+                    {hero.teaser}
+                  </p>
+                  
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-blue-200">
+                    <div className="flex items-center gap-2">
+                      <FaClock className="text-blue-300" />
+                      {formatDistanceToNow(new Date(hero.timestamp), { addSuffix: true })}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FaGlobe className="text-blue-300" />
+                      {hero.category.toUpperCase()}
+                    </div>
+                  </div>
+                  
                   <Link
                     href={`/trends/${hero.slug}`}
-                    className="inline-block bg-[var(--soft-blue)] text-[var(--white)] font-bold text-sm sm:text-base px-4 sm:px-5 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition-all duration-300 shadow-md"
+                    className="inline-flex items-center gap-3 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                   >
-                    Read More
+                    Read Full Story
+                    <FaArrowRight className="text-sm" />
                   </Link>
-                  <span className="text-xs sm:text-sm text-[var(--white)] font-medium bg-white/10 px-2 sm:px-3 py-1 rounded-lg">
-                    Updated {formatDistanceToNow(new Date(hero.timestamp), { addSuffix: true })}
-                  </span>
+                </div>
+                
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-2xl blur-3xl"></div>
+                  <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-1">
+                    <Image
+                      src={hero.image || "/images/placeholder.jpg"}
+                      alt={hero.title}
+                      width={600}
+                      height={400}
+                      className="w-full h-80 object-cover rounded-xl shadow-2xl"
+                      priority
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy-blue)]/80 via-transparent to-transparent opacity-70" />
-        </section>
-      )}
+            
+            {/* Animated background elements */}
+            <div className="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full animate-bounce"></div>
+            <div className="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/10 rounded-full animate-pulse"></div>
+          </section>
+        )}
 
-      <section className="max-w-7xl mx-auto py-2 sm:py-3 px-2 sm:px-4 sticky top-16 sm:top-20 bg-gradient-to-b from-[var(--white)] to-gray-50 z-40 shadow-md">
-        <div className="flex items-center overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[var(--soft-blue)] scrollbar-track-gray-200 pb-2">
-          {uniqueCategories.map((cat) => (
-            <Link
-              key={cat}
-              href={`#${cat.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`}
-              className="px-2 sm:px-3 py-1 sm:py-1.5 bg-[var(--navy-blue)] text-[var(--white)] rounded-full hover:bg-[var(--soft-blue)] transition-all duration-300 text-xs sm:text-sm font-medium whitespace-nowrap mx-1 sm:mx-1.5 shadow-sm hover:shadow-md"
-            >
-              {cat}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <TrendingNow initialTrends={nonHeroTrends} />
-
-      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12">
-        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
-          Explore by Category
-        </h2>
-        {Object.entries(categories).map(([category, items]) => (
-          <div
-            key={category}
-            className="mb-6 sm:mb-8 lg:mb-12"
-            id={category.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}
-          >
-            <h3 className="text-base sm:text-lg lg:text-xl font-semibold font-[--font-poppins] text-[var(--navy-blue)] capitalize mb-2 sm:mb-3 lg:mb-4">
-              {category}
-            </h3>
-            <div className="flex overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[var(--soft-blue)] scrollbar-track-gray-200 gap-3 sm:gap-4 pb-4">
-              {items.map((trend) => (
-                <div key={trend.slug} className="flex-shrink-0 w-60 sm:w-64 lg:w-72">
-                  <TrendCard {...trend} />
-                </div>
+        {/* Categories Navigation */}
+        <section className="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700">
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <FaNewspaper className="text-blue-600" />
+                Explore Categories
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {categories.map((category) => (
+                <Link
+                  key={category}
+                  href={`/?category=${category}`}
+                  className="group flex items-center gap-2 bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900 text-gray-700 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-300 px-4 py-2 rounded-xl transition-all duration-200 font-medium"
+                >
+                  <span className="capitalize">{category}</span>
+                  <FaArrowRight className="text-xs opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
               ))}
             </div>
           </div>
-        ))}
-      </section>
+        </section>
 
-      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12">
-        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
-          Related Categories
-        </h2>
-        <div className="flex flex-wrap gap-3 sm:gap-4">
-          {uniqueCategories.slice(0, 5).map((cat) => (
-            <Link
-              key={cat}
-              href={`#${cat.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`}
-              className="text-[var(--soft-blue)] hover:underline text-sm sm:text-base"
-            >
-              {cat}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12 lg:flex lg:flex-row lg:gap-6">
-        <div className="w-full lg:w-2/3 mb-6 lg:mb-0">
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
-            Featured Stories
-          </h2>
-          <div className="space-y-4 sm:space-y-6">
-            {nonHeroTrends.slice(0, 2).map((trend) => (
-              <div
-                key={trend.slug}
-                className="bg-[var(--white)] p-3 sm:p-4 lg:p-6 rounded-xl shadow-md flex flex-col sm:flex-row gap-3 sm:gap-4 hover:shadow-lg transition-shadow"
+        {/* Main Content */}
+        <main className="max-w-6xl mx-auto px-4 py-12">
+          {/* Featured Stories */}
+          <section className="mb-16">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <FaTrendingUp className="text-white text-sm" />
+                </div>
+                Featured Stories
+              </h2>
+              <Link
+                href="/trends"
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium flex items-center gap-2 transition-colors"
               >
-                <div className="w-full sm:w-1/3">
-                  <TrendImage
-                    src={trend.image || "/images/placeholder.jpg"}
-                    alt={trend.title}
-                    width={300}
-                    height={150}
-                    className="w-full h-20 sm:h-24 lg:h-28 object-cover rounded-lg"
-                  />
-                </div>
-                <div className="w-full sm:w-2/3">
-                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-[var(--navy-blue)] line-clamp-2">
-                    {trend.title}
-                  </h3>
-                  <p className="text-[var(--gray)] text-xs sm:text-sm line-clamp-2">{trend.teaser}</p>
-                  <Link
-                    href={`/trends/${trend.slug}`}
-                    className="text-[var(--soft-blue)] hover:underline text-xs sm:text-sm inline-block mt-2"
-                  >
-                    Read Full Story
-                  </Link>
-                </div>
+                View All
+                <FaArrowRight className="text-sm" />
+              </Link>
+            </div>
+            
+            {featuredTrends.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {featuredTrends.map((trend) => (
+                  <TrendCard key={trend.slug} trend={trend} />
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="w-full lg:w-1/3">
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] text-[var(--navy-blue)] mb-3 sm:mb-4 lg:mb-6">
-            Latest Updates
-          </h2>
-          <ul className="space-y-2 sm:space-y-3">
-            {nonHeroTrends.slice(0, 5).map((trend) => (
-              <li
-                key={trend.slug}
-                className="text-xs sm:text-sm flex flex-row gap-1 sm:gap-2"
-              >
-                <Link
-                  href={`/trends/${trend.slug}`}
-                  className="text-[var(--soft-blue)] hover:underline hover:text-[var(--navy-blue)] flex flex-row items-center gap-1 sm:gap-2 w-full"
-                >
-                  <span className="flex-1 truncate">{trend.title}</span>
-                  <span className="flex-shrink-0 whitespace-nowrap text-[var(--muted-blue)]">
-                    Updated {formatDistanceToNow(new Date(trend.timestamp), { addSuffix: true })}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 sm:mt-6 bg-[var(--white)] p-3 sm:p-4 rounded-xl shadow-md">
-            <p className="text-xs sm:text-sm text-[var(--gray)]">
-              Join <strong>10K+ readers</strong> getting daily trend updates!
-            </p>
-          </div>
-        </div>
-      </section>
+            ) : (
+              <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
+                <FaNewspaper className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  No Featured Stories Yet
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Check back soon for the latest trending stories
+                </p>
+              </div>
+            )}
+          </section>
 
-      <section className="max-w-7xl mx-auto py-6 sm:py-8 px-2 sm:px-4 lg:py-12 bg-[var(--navy-blue)] text-[var(--white)] rounded-xl shadow-md">
-        <div className="text-center">
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold font-[--font-poppins] mb-2 sm:mb-3 lg:mb-4">
-            Stay Ahead of the Trends
-          </h2>
-          <p className="text-sm sm:text-base lg:text-lg mb-3 sm:mb-4 lg:mb-6 opacity-90">
-            Subscribe for daily updates on what’s spiking now.
-          </p>
-          <form className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="px-3 sm:px-4 py-2 rounded-lg bg-[var(--white)] text-[var(--navy-blue)] placeholder-[var(--gray)] w-full focus:outline-none focus:ring-2 focus:ring-[var(--soft-blue)] text-sm sm:text-base"
-            />
-            <button className="bg-[var(--soft-blue)] px-4 sm:px-5 py-2 rounded-lg hover:bg-[var(--white)] hover:text-[var(--navy-blue)] transition font-semibold text-sm sm:text-base">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
-    </div>
+          {/* Trending Now Sidebar Component */}
+          <TrendingNow trends={trends.slice(0, 10)} />
+
+          {/* Stats Section */}
+          <section className="mt-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-8 shadow-xl">
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <div>
+                <FaChartLine className="text-4xl mx-auto mb-3 text-blue-200" />
+                <div className="text-3xl font-bold">{trends.length}</div>
+                <div className="text-blue-200">Active Trends</div>
+              </div>
+              <div>
+                <FaGlobe className="text-4xl mx-auto mb-3 text-blue-200" />
+                <div className="text-3xl font-bold">24/7</div>
+                <div className="text-blue-200">Real-time Updates</div>
+              </div>
+              <div>
+                <FaFire className="text-4xl mx-auto mb-3 text-blue-200" />
+                <div className="text-3xl font-bold">1M+</div>
+                <div className="text-blue-200">Monthly Readers</div>
+              </div>
+            </div>
+          </section>
+
+          {/* Call to Action */}
+          <section className="mt-16 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-12">
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Stay Ahead of the Trends
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                Get real-time updates on what's trending across sports, entertainment, technology, and more. 
+                Be the first to know what's spiking globally.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/trends"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Explore All Trends
+                </Link>
+                <button className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 flex items-center justify-center gap-2">
+                  <FaSearch />
+                  Search Trends
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </>
   );
 }
